@@ -1,0 +1,80 @@
+.property-card-container {
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  background: $white;
+
+  .property-image-container {
+    .property-image {
+      width: 100%;
+    }
+  }
+
+  .property-info-container {
+    .property-title {
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+    .property-location {
+      font-size: 1.2rem;
+      color: #777;
+    }
+    .property-area {
+      font-size: 1.2rem;
+      color: #777;
+    }
+    .property-rate {
+      font-size: 1.2rem;
+      color: #777;
+    }
+    .property-furnishing-status {
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+  }
+}
+
+@media all and (min-width: 960px) {
+  .property-card-container {
+
+    .property-image-container {
+      .property-image {
+      }
+    }
+
+    .property-info-container {
+      .property-title {
+        font-size: 2rem;
+        margin-top: 10px;
+      }
+      .property-location {
+        font-size: 1.8rem;
+        margin-top: 10px;
+      }
+      .property-area {
+        font-size: 1.8rem;
+        margin-top: 10px;
+      }
+      .property-rate {
+        font-size: 1.8rem;
+        margin-top: 10px;
+      }
+      .property-furnishing-status {
+        font-size: 1.8rem;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+@media all and (max-width: 959px) and (min-width: 600px) {
+
+}
+
+@media all and (max-width: 599px) and (min-width: 320px) {
+
+}
