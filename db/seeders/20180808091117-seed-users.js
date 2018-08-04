@@ -48,7 +48,7 @@ module.exports = {
                     salt: '1234',
                     hash: hashlib.sha256('pass1234' + '1234').digest('hex')
                 }),
-                role: 'user',
+                role: 'consumer',
                 status: 'active',
                 sex: 'male',
                 createdAt: moment().toISOString(),
@@ -67,7 +67,7 @@ module.exports = {
                     salt: '1234',
                     hash: hashlib.sha256('pass1234' + '1234').digest('hex')
                 }),
-                role: _.sample(['admin', 'manager', 'user']),
+                role: _.sample(['admin', 'manager', 'consumer']),
                 status: _.sample(['active', 'inactive']),
                 sex: _.sample(['male', 'female', 'other']),
                 createdAt: moment().toISOString(),

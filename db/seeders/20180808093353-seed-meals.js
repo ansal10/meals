@@ -57,19 +57,20 @@ module.exports = {
                 "title": randomTitle(),
                 "description": randomDescription(),
                 "createdAt": d.toISOString(),
-                "updatedAt": d.toISOString(),
+                'updatedAt': d.toISOString(),
                 calories: Number(Number(Math.random()*1000 + 10).toFixed(0)),
                 type: _.sample(models.Meal.rawAttributes.type.values),
                 items: randomItems(),
                 UserId: _.sample(users).id,
                 time: d.format(),
-                day: d.format()
+                day: d.format(),
+                date: d.format()
             };
             meals.push(data);
         }
 
         try {
-         return await models.Meal.bulkCreate(models);
+         return await models.Meal.bulkCreate(meals);
         }catch (e) {
             console.error(e);
         }

@@ -3,19 +3,19 @@ process.env.NODE_ENV = 'test';
 const expect = require('chai').expect;
 const assert = require('chai').assert;
 const truncate = require('../truncate');
-const houseFactory = require('../factories/house');
-const houseHelper = require('../../../utilities/helpers/meal_helper');
+const mealFactory = require('../factories/meal');
+const mealHelper = require('../../../utilities/helpers/meal_helper');
 const userFactory = require('../factories/user');
 const moment = require('moment');
 
 
-describe('House model', () => {
-    let house;
+describe('Meal model', () => {
+    let meal;
     let user;
 
     beforeEach(async () => {
         await truncate();
-        house = await houseFactory();
+        meal = await mealFactory();
         user = await userFactory();
     });
 
@@ -23,17 +23,17 @@ describe('House model', () => {
         await expect(12).to.equal(12)
     });
 
-    it('should create house with string form of rent', async()=>{
-        let h = await houseFactory({rent:'1212'});
+    it('should create meal with string form of rent', async()=>{
+        let h = await mealFactory({rent:'1212'});
         assert(h.rent === 1212);
 
     });
 
-    it('should search for house', async () => {
+    it('should search for meal', async () => {
         let a = [];
         for (let i = 0 ; i < 100 ; i++){
-            // await houseFactory();
-            a.push(houseFactory());
+            // await mealFactory();
+            a.push(mealFactory());
         }
         await Promise.all(a);
 
@@ -55,6 +55,6 @@ describe('House model', () => {
             floor:[0,1,2,3,4,5,6,7,8,9],
             powerBackup: ['full', 'partial', 'no'],
         };
-        let retVal = await houseHelper.searchHouse(user, queryParams);
+        let retVal = await mealHelper.searchMeal(user, queryParams);
     });
 });

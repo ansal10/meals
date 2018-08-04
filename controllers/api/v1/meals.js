@@ -11,35 +11,35 @@ router.post('/search', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let page = req.query.page || 0;
 
-    let houses = await mealHelper.searchHouse(user, req.body || {}, page || 0);
+    let meals = await mealHelper.searchMeal(user, req.body || {}, page || 0);
     let prevUrl = page > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) - 1}), true) : null;
-    let nextUrl = houses.length > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) + 1}), true) : null;
+    let nextUrl = meals.length > 0 ? req.originalUrl.split("?")[0] + "?" + urlcodeJson.encode(Object.assign({}, req.query, {page: Number(page) + 1}), true) : null;
 
-    genUtil.sendJsonResponse(res, 200, '', houses, nextUrl, prevUrl);
+    genUtil.sendJsonResponse(res, 200, '', meals, nextUrl, prevUrl);
 });
 
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await mealHelper.houseDetails(user, req.params.id);
-    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, retVal.args.house);
+    let retVal = await mealHelper.mealDetails(user, req.params.id);
+    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, retVal.args.meal);
 });
 
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await mealHelper.updateHouse(user, req.body, req.params.id);
+    let retVal = await mealHelper.updateMeal(user, req.body, req.params.id);
     genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, null);
 });
 
 router.delete('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await mealHelper.deleteHouse(user, req.params.id);
+    let retVal = await mealHelper.deleteMeal(user, req.params.id);
     genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, null)
 });
 
 router.post('/', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await mealHelper.createHouseInDatabase(user, req.body);
-    genUtil.sendJsonResponse(res, retVal.status ? 201 : 400, retVal.message, retVal.args.house)
+    let retVal = await mealHelper.createMealInDatabase(user, req.body);
+    genUtil.sendJsonResponse(res, retVal.status ? 201 : 400, retVal.message, retVal.args.meal)
 });
 
 module.exports = router;

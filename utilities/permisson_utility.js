@@ -6,7 +6,7 @@ const canSeeAllUsers = (user) => {
 };
 
 const canUpdateMeal = (user, meal) => {
-    if( user.role === 'user' && meal.UserId === user.id)
+    if( user.role === 'consumer' && meal.UserId === user.id)
         return true;
     return user.role === 'admin';
 

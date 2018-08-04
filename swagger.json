@@ -17,8 +17,8 @@
       "description": "API for users in the system"
     },
     {
-      "name": "House",
-      "description": "API for the house in the system"
+      "name": "Meal",
+      "description": "API for the meal in the system"
     },
     {
       "name": "Uploads",
@@ -494,19 +494,19 @@
         }
       }
     },
-    "/house": {
+    "/meal": {
       "post": {
         "tags": [
-          "House"
+          "Meal"
         ],
-        "description": "Create a new House with provided details",
+        "description": "Create a new Meal with provided details",
         "parameters": [
           {
-            "name": "house",
+            "name": "meal",
             "in": "body",
-            "description": "House that we want to create",
+            "description": "Meal that we want to create",
             "schema": {
-              "$ref": "#/definitions/House"
+              "$ref": "#/definitions/Meal"
             }
           }
         ],
@@ -515,13 +515,13 @@
         ],
         "responses": {
           "201": {
-            "description": "New house is created",
+            "description": "New meal is created",
             "schema": {
               "$ref": "#/definitions/SuccessUserResponse"
             }
           },
           "4xx": {
-            "description": "When house creation is failed",
+            "description": "When meal creation is failed",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -529,24 +529,24 @@
         }
       }
     },
-    "/house/{houseId}": {
+    "/meal/{mealId}": {
       "parameters": [
         {
-          "name": "houseId",
+          "name": "mealId",
           "in": "path",
           "required": true,
-          "description": "ID of house that we want to find",
+          "description": "ID of meal that we want to find",
           "type": "string"
         }
       ],
       "get": {
         "tags": [
-          "House"
+          "Meal"
         ],
-        "summary": "Get house details of the house with ID",
+        "summary": "Get meal details of the meal with ID",
         "responses": {
           "200": {
-            "description": "House is found",
+            "description": "Meal is found",
             "schema": {
               "properties": {
                 "success": {
@@ -556,7 +556,7 @@
                       "type": "string"
                     },
                     "data": {
-                      "$ref": "#/definitions/House"
+                      "$ref": "#/definitions/Meal"
                     }
                   }
                 }
@@ -564,7 +564,7 @@
             }
           },
           "4xx": {
-            "description": "House is not found",
+            "description": "Meal is not found",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -572,23 +572,23 @@
         }
       },
       "put": {
-        "summary": "Update house with given ID",
+        "summary": "Update meal with given ID",
         "tags": [
-          "House"
+          "Meal"
         ],
         "parameters": [
           {
-            "name": "house",
+            "name": "meal",
             "in": "body",
-            "description": "House with updates values",
+            "description": "Meal with updates values",
             "schema": {
-              "$ref": "#/definitions/House"
+              "$ref": "#/definitions/Meal"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "House is Updated",
+            "description": "Meal is Updated",
             "schema": {
               "properties": {
                 "success": {
@@ -598,7 +598,7 @@
                       "type": "string"
                     },
                     "data": {
-                      "$ref": "#/definitions/House"
+                      "$ref": "#/definitions/Meal"
                     }
                   }
                 }
@@ -606,7 +606,7 @@
             }
           },
           "4xx": {
-            "description": "House is not found",
+            "description": "Meal is not found",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -614,11 +614,11 @@
         }
       },
       "delete":{
-        "summary": "Delete house with given ID",
-        "tags": ["House"],
+        "summary": "Delete meal with given ID",
+        "tags": ["Meal"],
         "responses": {
           "200": {
-            "description": "House is deleted",
+            "description": "Meal is deleted",
             "schema": {
               "properties": {
                 "success": {
@@ -633,7 +633,7 @@
             }
           },
           "4xx": {
-            "description": "House is not found",
+            "description": "Meal is not found",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -641,19 +641,19 @@
         }
       }
     },
-    "/house/search": {
+    "/meal/search": {
       "post": {
         "tags": [
-          "House"
+          "Meal"
         ],
-        "description": "Search house based on parameters",
+        "description": "Search meal based on parameters",
         "parameters": [
           {
-            "name": "house",
+            "name": "meal",
             "in": "body",
             "description": "Search parameters",
             "schema": {
-              "$ref": "#definitions/House Search"
+              "$ref": "#definitions/Meal Search"
             }
           },
           {
@@ -667,7 +667,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Fetched a list of houses matching search params",
+            "description": "Fetched a list of meals matching search params",
             "schema": {
               "properties": {
                 "success": {
@@ -676,7 +676,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#definitions/House"
+                        "$ref": "#definitions/Meal"
                       }
                     }
                   }
@@ -686,48 +686,6 @@
           },
           "4xx": {
             "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        }
-      }
-    },
-    "uploads/images": {
-      "description": "Upload a single image to server",
-      "post": {
-        "tags": [
-          "Uploads"
-        ],
-        "description": "Upload single image to server",
-        "parameters": {},
-        "responses": {
-          "200": {
-            "description": "Image is uploaded successfully",
-            "schema": {
-              "properties": {
-                "success": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "success message"
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "uploadUrl": "string",
-                        "description": "Url to fetch uploaded image",
-                        "example": "http://localhost:3000/uploads/images/abc.jpg"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "4xx": {
-            "description": "Upload error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -782,165 +740,54 @@
         }
       }
     },
-    "House": {
+    "Meal": {
       "properties": {
         "title": {
           "type": "string",
-          "example": "3BHK at posh locality of gurgaon sector 46",
+          "example": "Lovely breakfast",
           "description": "Title with length of range (10, 50)"
         },
         "description": {
           "type": "string",
-          "example": "3BHK at posh locality of gurgaon sector 46 with fully furnished and green surroundings with no interference from landlord",
-          "description": "Title with length of range (50, 1000)"
+          "example": "That was a lovely breakfast on monday morning",
+          "description": "Title with length of range (10, 1000)"
         },
-        "rent": {
+        "calories": {
           "type": "double",
           "example": 1000.0,
-          "description": "Rent in Dollars in range (100, 999000)"
-        },
-        "maintenance": {
-          "type": "object",
-          "properties": {
-            "monthly": {
-              "type": "double",
-              "example": 10,
-              "description": "Monthly maintenance charges"
-            },
-            "deposit": {
-              "type": "double",
-              "example": 10,
-              "description": "Deposit charges"
-            },
-            "brokerage": {
-              "type": "double",
-              "example": 10,
-              "description": "brokerage charges"
-            },
-            "annually": {
-              "type": "double",
-              "example": 10,
-              "description": "annually maintenance charges"
-            }
-          }
-        },
-        "builtArea": {
-          "type": "double",
-          "description": "Built area of the house minimum 250 sqft",
-          "example": 300
-        },
-        "carpetArea": {
-          "type": "double",
-          "description": "Total area of the house minimum 250 sqft and greater or equal than builtArea",
-          "example": 300
-        },
-        "city": {
-          "type": "string",
-          "description": "Valid city name of lenght in range (2,30)",
-          "example": "gurgaon"
-        },
-        "locality": {
-          "type": "string",
-          "description": "Valid locality name of lenght in range (2,30)",
-          "example": "gurgaon sector 8"
-        },
-        "country": {
-          "type": "string",
-          "description": "Valid country name of lenght in range (2,30)",
-          "example": "india"
-        },
-        "address": {
-          "type": "string",
-          "description": "Valid address name of lenght in range (10,150)",
-          "example": "gurgaon"
-        },
-        "latitude": {
-          "type": "double",
-          "description": "Valid latitude",
-          "example": -19.09
-        },
-        "longitude": {
-          "type": "double",
-          "description": "Valid longitude",
-          "example": -19.09
+          "description": "Calories in range (1, 10000)"
         },
         "type": {
           "type": "string",
           "enum": [
-            "1rk",
-            "2rk",
-            "1bhk",
-            "2bhk",
-            "3bhk",
-            "4bhk",
-            "5bhk",
-            "5bhk+"
+            "breakfast",
+            "lunch",
+            "evening_snacks",
+            "dinner"
           ]
         },
-        "availability": {
-          "type": "string",
-          "enum": [
-            "yes",
-            "no",
-            "archive"
-          ]
-        },
-        "availableFor": {
-          "type": "string",
-          "enum": [
-            "all",
-            "family",
-            "couples",
-            "bachelors"
-          ]
-        },
-        "availableFrom": {
-          "type": "string",
-          "example": "2012-07-14T01:00:00+01:00",
-          "description": "Valid ISO date"
-        },
-        "floor": {
-          "type": "integer",
-          "example": 1,
-          "description": "Valid floor within range (0, 150)"
-        },
-        "powerBackup": {
-          "type": "string",
-          "enum": [
-            "full",
-            "partial",
-            "no"
-          ]
-        },
-        "features": {
+        "items": {
           "type": "array",
-          "description": "List of features",
+          "description": "List of items you had",
           "example": [
-            "24x7 security"
+            "boiled eggs",
+            "potato mash"
           ]
         },
-        "tags": {
-          "type": "array",
-          "description": "List of tags, easy for searching",
-          "example": [
-            "seaview"
-          ]
-        },
-        "images": {
-          "type": "array",
-          "description": "List of image urls",
-          "example": [
-            "https://picsum.photos/500/500",
-            "https://picsum.photos/500/500"
-          ]
-        },
-        "furnishingStatus": {
+        "time":{
           "type": "string",
-          "enum": [
-            "furnished",
-            "unfurnished",
-            "semifurnished"
-          ]
+          "example": "13:03",
+          "description": "Valid HH:mm format of time ( 02:35 ) or ( 21:06 )"
+        },
+        "day":{
+          "type": "string",
+          "description": "Valid day name in lowercase",
+          "example": "sunday"
+        },
+        "date":{
+          "type": "string",
+          "example":"2018-03-12",
+          "description": "Valid YYYY-MM-DD format date ( 2018-03-14 )"
         },
         "createdAt": {
           "type": "string",
@@ -949,172 +796,72 @@
         "updatedAt": {
           "type": "string",
           "description": "Valid ISO date, Not required for creating"
+        },
+        "status":{
+          "type": "string",
+          "example": "below",
+          "description": " Values specifying his goal needs ( exact, over, below ), Not required in creating"
         }
       }
     },
-    "House Search": {
+    "Meal Search": {
       "properties": {
-        "searchString": {
-          "type": "string",
-          "example": "gurgaon",
-          "description": "Search string that can be part of city, locality, street"
-        },
-        "rent": {
-          "type": "array",
-          "items": {
-            "type": "double"
-          },
-          "example": [
-            1,
-            10000
-          ],
-          "description": "Search for rent between the range"
-        },
-        "builtArea": {
-          "type": "array",
-          "items": {
-            "type": "double"
-          },
-          "example": [
-            200.0,
-            1000.0
-          ],
-          "description": "Search for house with built area in above range"
-        },
-        "carpetArea": {
-          "type": "array",
-          "items": {
-            "type": "double"
-          },
-          "example": [
-            200.0,
-            1000.0
-          ],
-          "description": "Search for house with carpet area in above range"
-        },
-        "city": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "example": [
-            "delhi",
-            "gurgaon"
-          ],
-          "description": "Search house in above cities only"
-        },
-        "locality": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "example": [
-            "dlf1",
-            "dlf2"
-          ],
-          "description": "Search house in above locality only"
-        },
-        "country": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "example": [
-            "india",
-            "usa"
-          ],
-          "description": "Search house in above countries only"
-        },
-        "latitude": {
-          "type": "array",
-          "items": {
-            "type": "double"
-          },
-          "example": [
-            -19.0,
-            10.0
-          ],
-          "description": "Search for house with latitudes in above range"
-        },
-        "longitude": {
-          "type": "array",
-          "items": {
-            "type": "double"
-          },
-          "example": [
-            -19.0,
-            10.0
-          ],
-          "description": "Search for house with longitude in above range"
-        },
         "type": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "example": [
-            "1rk",
-            "1bhk"
+            "breakfast",
+            "dinner",
+            "lunch",
+            "evening_snacks"
           ],
-          "description": "Search house in above types only"
+          "description": "Search meal in above types only"
         },
-        "availability": {
+        "time": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "example": [
-            "yes",
-            "no"
+            "12:00",
+            "16:00"
           ],
-          "description": "Search house in above availability only , default yes"
+          "description": "Search meal in above time range only"
         },
-        "availableFor": {
+        "day": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "example": [
-            "all",
-            "bachelors",
-            "couple"
+            "sunday",
+            "monday",
+            "wednesday"
           ],
-          "description": "Search house in above available tenants only , default all"
+          "description": "Search meals in above days only"
         },
-        "availableFrom": {
-          "type": "string",
-          "example": "2008-09-15T15:53:00",
-          "description": "Valid ISO date"
-        },
-        "powerBackup": {
+        "date": {
           "type": "array",
           "items": {
             "type": "string"
           },
           "example": [
-            "full",
-            "partial"
+            "2018-04-19",
+            "2018-08-18"
           ],
-          "description": "Search for with only above mentioned power backup type"
-        },
-        "furnishingStatus": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "example": [
-            "furnished"
-          ],
-          "description": "Search for with only above mentioned power backup type"
+          "description": "Search meals in between above dates range only"
         },
         "UserId":{
           "type": "array",
           "items":{
-            "type": "string"
+            "type": "integer"
           },
-          "example":[
+          "example": [
+            12,45,67,87
           ],
-          "description": "Search for houses with these users only"
+          "description": "Search meals for above users only , provided he can access their meals"
         }
       }
     },

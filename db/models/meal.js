@@ -95,12 +95,39 @@ module.exports = (DataType, Sequelize) => {
         time:{
             type: Sequelize.STRING,
             allowNull: false,
-            toUTCTime: true
+            trim: true,
+            validate:{
+                isValidField: (val, next) => {
+                    if (moment(val, 'HH:mm').isValid())
+                        next();
+                    else next('Invalid time format, required valid HH:mm only');
+                }
+            }
         },
         day:{
 	        type: Sequelize.ENUM('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
             allowNull: false,
-            toDay: true
+            trim: true,
+            lowercase: true,
+            validate: {
+	            isValidField: (val, next) => {
+		            if (moment(val, 'dddd').isValid())
+			            next();
+		            else next('Invalid day format, required valid day ( like monday ) name only');
+	            }
+            }
+        },
+        date:{
+            type: Sequelize.STRING,
+            allowNull: false,
+            trim:true,
+            validate: {
+	            isValidField: (val, next) => {
+		            if (moment(val, 'HH:mm').isValid())
+			            next();
+		            else next('Invalid date format, required valid YYYY-MM-DD only');
+	            }
+            }
         },
         createdAt: {
             allowNull: false,
@@ -120,12 +147,6 @@ module.exports = (DataType, Sequelize) => {
     sequelizeTransforms(Meal, {
         toDouble: (val, def) =>{
             return Number(val);
-        },
-        toUTCTime: (val, def) =>{
-            moment(val).utc().format('HH:MM')
-        },
-        toDay: (val, def) => {
-            moment(val).utc().format('dddd').toLowerCase()
         }
     });
     return Meal;

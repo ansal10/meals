@@ -9,9 +9,10 @@ const swaggerUi = require( "swagger-ui-express" );
 const swaggerDocument = require( "./swagger.json" );
 const indexRouter = require( "./controllers/api/v1/index" );
 const usersRouter = require( "./controllers/api/v1/users" );
-const houseRouter = require( "./controllers/api/v1/meals" );
+const mealRouter = require( "./controllers/api/v1/meals" );
 const app = express();
 const compression = require( "compression" );
+var underscore = require('underscore');
 
 app.use( session( { "secret": "SecretNumber%$^&$^", "cookie": { "maxAge": 1000 * 60 * 60 * 24 } } ) );  // 24 hour max age
 
@@ -42,7 +43,7 @@ app.use( "/api-docs", swaggerUi.serve, swaggerUi.setup( swaggerDocument ) );
 
 
 app.use( "/api/v1/user", usersRouter );
-app.use( "/api/v1/house", houseRouter );
+app.use( "/api/v1/meal", mealRouter );
 app.use( "/", indexRouter );
 
 // catch 404 and forward to error handler

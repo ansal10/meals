@@ -5,23 +5,23 @@ const assert = require('chai').assert;
 const truncate = require('../truncate');
 const models = require('../../../db/models/index');
 const userFactory = require('../factories/user');
-const houseFactory = require('../factories/house');
+const mealFactory = require('../factories/meal');
 const userHelper = require('../../../utilities/helpers/user_helper');
 
 describe('User model', () => {
-    let user, house;
+    let user, meal;
     beforeEach(async () => {
         await truncate();
     });
 
-    it('should allow realtor to assign house', async () => {
+    it('should allow realtor to assign meal', async () => {
         user = await userFactory();
         console.log("user id is " + user.id);
-        let h2 = await houseFactory();
+        let h2 = await mealFactory();
         h2.UserId= user.id;
         await h2.save();
-        let houses = await models.House.findAll({include:[{model:models.User}]});
-        console.log(houses)
+        let meals = await models.Meal.findAll({include:[{model:models.User}]});
+        console.log(meals)
     });
 
     it('should check update user details', async () => {
@@ -30,7 +30,7 @@ describe('User model', () => {
             password: 'john1234',
             name: 'John Dick',
             sex: 'male',
-            role: 'user',
+            role: 'consumer',
             status: 'active'
         };
         await userHelper.createUserInDatabase(user);
@@ -51,7 +51,7 @@ describe('User model', () => {
             password: 'john1234',
             name: 'John Dick',
             sex: 'male',
-            role: 'user',
+            role: 'consumer',
             status: 'active'
         };
         let retVal = await userHelper.createUserInDatabase(user);

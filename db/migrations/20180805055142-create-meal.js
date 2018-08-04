@@ -47,6 +47,10 @@ module.exports = {
                 type: Sequelize.ENUM('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
                 allowNull: false,
             },
+            date:{
+                type: Sequelize.STRING,
+                allowNull: false
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

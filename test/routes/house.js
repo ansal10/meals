@@ -8,7 +8,7 @@ const should = chai.should();
 const truncate = require('../db/truncate');
 const moment = require('moment');
 const faker = require('faker');
-const houseFactory = require('../db/factories/house');
+const mealFactory = require('../db/factories/meal');
 const userFactory = require('../db/factories/user');
 const hashlib = require('hash.js');
 const sinon = require('sinon');
@@ -20,9 +20,9 @@ const request = require('supertest');
 chai.use(chaiHttp);
 
 
-describe('House', async () => {
+describe('Meal', async () => {
 
-    let defaultHouseParams = {
+    let defaultMealParams = {
         title: faker.name.firstName() + faker.name.lastName(),
         description: "This is just a test desription that will check what is valid description here around",
         rent: faker.random.number()%9000 + 500,
@@ -68,26 +68,26 @@ describe('House', async () => {
 
     });
 
-    describe('/search POST Search Houses', async () => {
+    describe('/search POST Search meals', async () => {
 
         it('it should return all available property user successful', async () => {
-            await houseFactory();
-            await houseFactory();
+            await mealFactory();
+            await mealFactory();
             let res = await authenticatedUser
-                .post('/api/v1/house/search')
+                .post('/api/v1/meal/search')
                 .send({});
             res.should.have.status(200);
             assert(res.body.success.data.length === 2);
         });
         it('it should return no property', async () => {
             let res = await authenticatedUser
-                .post('/api/v1/house/search');
+                .post('/api/v1/meal/search');
             res.should.have.status(200);
             assert(res.body.success.data.length === 0);
         });
         it('should search based on custom params', async () => {
             let res = await authenticatedUser
-                .post('/api/v1/house/search')
+                .post('/api/v1/meal/search')
                 .send({
                     rent:[1,10000],
                     floor: [1, 10]
@@ -96,9 +96,9 @@ describe('House', async () => {
         });
     });
 
-    describe('/ POST House', async () => {
-        it('should create house with successfull parameters', async() => {
-            let res = await authenticatedUser.post('/api/v1/house').send(defaultHouseParams);
+    describe('/ POST Meal', async () => {
+        it('should create meal with successfull parameters', async() => {
+            let res = await authenticatedUser.post('/api/v1/meal').send(defaultMealParams);
             res.should.have.status(201);
             if(res.body.error)
                 console.log(res.body.error.message);
@@ -106,20 +106,20 @@ describe('House', async () => {
         });
 
         it('should report error for no images', async () => {
-            let res = await authenticatedUser.post('/api/v1/house').send(Object.assign({}, defaultHouseParams, {images:[]}));
+            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {images:[]}));
             res.should.have.status(400);
             expect(res.body.error.message.includes('Images'));
         });
 
         it('should report error on invaid features', async () => {
-            let params = Object.assign({}, defaultHouseParams, {features: ['  ']});
-            let res = await authenticatedUser.post('/api/v1/house').send(params);
+            let params = Object.assign({}, defaultMealParams, {features: ['  ']});
+            let res = await authenticatedUser.post('/api/v1/meal').send(params);
             res.should.have.status(400);
             expect(res.body.error.message.includes('Amenity'));
         });
 
         it('should report invalid type of data', async () => {
-            let res = await authenticatedUser.post('/api/v1/house').send(Object.assign({}, defaultHouseParams, {images:{}}));
+            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {images:{}}));
             res.should.have.status(400);
             expect(res.body.error.message.includes('Invalid value in Images'));
         });
@@ -127,40 +127,40 @@ describe('House', async () => {
 
     describe('/:id DELETE', async () => {
         it('should delete the record successfully', async () => {
-            let h = await houseFactory();
+            let h = await mealFactory();
             let res = await authenticatedUser
-                .delete('/api/v1/house/'+h.id);
+                .delete('/api/v1/meal/'+h.id);
             res.should.have.status(200);
-            expect( (await models.House.findOne({where:{id: h.id}})) == null)
+            expect( (await models.Meal.findOne({where:{id: h.id}})) == null)
         });
 
         it('should not delete the record successfully', async () => {
-            let h = await houseFactory();
+            let h = await mealFactory();
             let res = await authenticatedUser
-                .delete('/api/v1/house/'+(h.id +1));
+                .delete('/api/v1/meal/'+(h.id +1));
             res.should.have.status(400);
-            expect( (await models.House.findOne({where:{id: h.id}})) != null)
+            expect( (await models.Meal.findOne({where:{id: h.id}})) != null)
         });
     });
 
     describe('/:id PUT', async () => {
         it('should update the record successfully', async () => {
-            let h = await houseFactory();
+            let h = await mealFactory();
             let res = await authenticatedUser
-                .put('/api/v1/house/'+h.id)
+                .put('/api/v1/meal/'+h.id)
                 .send({rent:1001});
             res.should.have.status(200);
-            let h2 = await models.House.findOne({where:{id: h.id}})
+            let h2 = await models.Meal.findOne({where:{id: h.id}})
             expect(h2.rent === 1001)
 
         });
 
         it('should not delete the record successfully', async () => {
-            let h = await houseFactory();
+            let h = await mealFactory();
             let res = await authenticatedUser
-                .put('/api/v1/house/'+(h.id +1));
+                .put('/api/v1/meal/'+(h.id +1));
             res.should.have.status(400);
-            expect( (await models.House.findOne({where:{id: h.id}})).rent === h.rent)
+            expect( (await models.Meal.findOne({where:{id: h.id}})).rent === h.rent)
         });
     });
 

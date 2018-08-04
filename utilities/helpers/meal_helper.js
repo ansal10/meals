@@ -20,11 +20,11 @@ const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUT
 const Op = models.Sequelize.Op;
 Array.prototype.isArray = true;
 
-const listAllHouse = async (user, params, page) => {
+const listAllMeal = async (user, params, page) => {
     // let params = {};
     let pageNumber = Number(page || 0);
 
-    // await Object.keys(models.House.attributes).forEach(async (attr) => {
+    // await Object.keys(models.Meal.attributes).forEach(async (attr) => {
     //     if (searchParams[attr])
     //         params[attr] = searchParams[attr];
     // });
@@ -32,7 +32,7 @@ const listAllHouse = async (user, params, page) => {
     if (!params.availability) params.availability = 'yes';
 
 
-    let houses = await models.House.findAll({
+    let meals = await models.Meal.findAll({
         limit: config.pageLimit,
         offset: config.pageLimit * pageNumber,
         attributes: LIST_ALL_HOUSE_ATTRIBUTES,
@@ -43,51 +43,51 @@ const listAllHouse = async (user, params, page) => {
         ]
     });
 
-    houses = _.map(houses, (h) => {
+    meals = _.map(meals, (h) => {
         if (h.images && h.images.length > 0)
             h.images = [h.images[0]];
         return h.dataValues;
     });
 
-    for (let i = 0; i < houses.length; i++) {
-        houses[i].edit = permission.canUpdateMeal(user, houses[i])
+    for (let i = 0; i < meals.length; i++) {
+        meals[i].edit = permission.canUpdateMeal(user, meals[i])
     }
-    return houses;
+    return meals;
 };
 
-const houseDetails = async (user, houseId) => {
-    let house = await models.House.findOne({where: {id: houseId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES});
-    if (house) {
-        house = house.dataValues;
-        house.edit = permission.canUpdateMeal(user, house);
+const mealDetails = async (user, mealId) => {
+    let meal = await models.Meal.findOne({where: {id: mealId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES});
+    if (meal) {
+        meal = meal.dataValues;
+        meal.edit = permission.canUpdateMeal(user, meal);
         return {
             status: true,
             message: '',
-            args: {house: house}
+            args: {meal: meal}
         }
     } else {
         return {
             status: false,
-            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, houseId),
+            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId),
             args: {}
         }
     }
 };
 
-const updateHouse = async (user, houseParams, houseId) => {
-    let house = await models.House.findOne({where: {id: houseId}});
-    if (house && permission.canUpdateMeal(user, house)) {
+const updateMeal = async (user, mealParams, mealId) => {
+    let meal = await models.Meal.findOne({where: {id: mealId}});
+    if (meal && permission.canUpdateMeal(user, meal)) {
 
         try {
-            houseParams = _.pick(houseParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
-            Object.assign(house, house, houseParams);
-            await house.validate();
-            await house.save();
+            mealParams = _.pick(mealParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
+            Object.assign(meal, meal, mealParams);
+            await meal.validate();
+            await meal.save();
             return {
                 status: true,
                 message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY,
                 args: {
-                    house: house
+                    meal: meal
                 }
             }
         } catch (e) {
@@ -107,17 +107,17 @@ const updateHouse = async (user, houseParams, houseId) => {
     }
 };
 
-const createHouseInDatabase = async (user, houseParams) => {
+const createMealInDatabase = async (user, mealParams) => {
     if (permission.canCreateMeal(user)) {
-        houseParams = _.pick(houseParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
-        houseParams = Object.assign({}, houseParams, {UserId: user.id});
+        mealParams = _.pick(mealParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
+        mealParams = Object.assign({}, mealParams, {UserId: user.id});
         try {
-            let house = await models.House.create(houseParams);
+            let meal = await models.Meal.create(mealParams);
             return {
                 status: true,
                 message: config.MESSAGES.RESOURCE_CREATED_SUCCESSFULLY,
                 args: {
-                    house: house
+                    meal: meal
                 }
             }
         } catch (e) {
@@ -136,7 +136,7 @@ const createHouseInDatabase = async (user, houseParams) => {
     }
 };
 
-const searchHouse = async (user, searchParams, page) => {
+const searchMeal = async (user, searchParams, page) => {
     // searchable params
 
     let isValidArray = function (v) {
@@ -272,7 +272,7 @@ const searchHouse = async (user, searchParams, page) => {
             })
         }
 
-        return await listAllHouse(user, query, page);
+        return await listAllMeal(user, query, page);
     } catch (e) {
         return {
             status: false,
@@ -282,11 +282,11 @@ const searchHouse = async (user, searchParams, page) => {
     }
 };
 
-const deleteHouse = async (user, houseId) => {
-    let house = await models.House.findOne({where: {id: houseId}});
-    if (house) {
-        if (permission.canUpdateMeal(user, house)) {
-            await house.destroy();
+const deleteMeal = async (user, mealId) => {
+    let meal = await models.Meal.findOne({where: {id: mealId}});
+    if (meal) {
+        if (permission.canUpdateMeal(user, meal)) {
+            await meal.destroy();
             return {
                 status: true,
                 message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY
@@ -300,14 +300,14 @@ const deleteHouse = async (user, houseId) => {
     } else {
         return {
             status: false,
-            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, houseId)
+            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId)
         }
     }
 };
 
-module.exports.listAllHouse = listAllHouse;
-module.exports.houseDetails = houseDetails;
-module.exports.updateHouse = updateHouse;
-module.exports.createHouseInDatabase = createHouseInDatabase;
-module.exports.searchHouse = searchHouse;
-module.exports.deleteHouse = deleteHouse;
+module.exports.listAllMeal = listAllMeal;
+module.exports.mealDetails = mealDetails;
+module.exports.updateMeal = updateMeal;
+module.exports.createMealInDatabase = createMealInDatabase;
+module.exports.searchMeal = searchMeal;
+module.exports.deleteMeal = deleteMeal;

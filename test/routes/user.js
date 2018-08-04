@@ -24,7 +24,7 @@ describe('Users', async () => {
         name: 'Jon dick',
         password: 'test1234',
         sex: 'male',
-        role: 'user',
+        role: 'consumer',
         status: 'active'
     };
 
@@ -40,7 +40,7 @@ describe('Users', async () => {
                 name: 'Jon dick',
                 password: 'test1234',
                 sex: 'male',
-                role: 'user',
+                role: 'consumer',
                 status: 'active'
             };
             let res = await chai.request(server)
@@ -58,7 +58,7 @@ describe('Users', async () => {
                 name: 'Jon dick',
                 password: 'test1234',
                 sex: 'male',
-                role: 'user',
+                role: 'consumer',
                 status: 'active'
             };
             await userHelper.createUserInDatabase(user);
@@ -76,7 +76,7 @@ describe('Users', async () => {
                 name: 'Don',
                 password: 'Sed',
                 sex: 'male',
-                role: 'user',
+                role: 'consumer',
                 status: 'active'
             };
 
@@ -93,7 +93,7 @@ describe('Users', async () => {
                 name: 'Jon dick',
                 password: 'test1234',
                 sex: 'male',
-                role: 'user',
+                role: 'consumer',
                 status: 'active'
             };
             let retVal = await userHelper.createUserInDatabase(user);
@@ -124,7 +124,7 @@ describe('Users', async () => {
                 name: 'Jon dick',
                 password: 'test1234',
                 sex: 'male',
-                role: 'user',
+                role: 'consumer',
                 status: 'active'
             };
             await userHelper.createUserInDatabase(user);

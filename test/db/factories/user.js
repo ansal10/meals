@@ -13,7 +13,7 @@ const data = async (props = {}) => {
     const defaultProps = {
         email: (faker.name.firstName().replace(/ /g, 'a')+'@domain.com').toLowerCase(),
         name: faker.name.firstName(),
-        role: 'user',
+        role: 'consumer',
         status: 'active',
         sex: 'male',
 

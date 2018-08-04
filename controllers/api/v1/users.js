@@ -20,7 +20,7 @@ router.post('/signup', async (req, res, next) => {
     let password = req.body.password || '';
     let name = req.body.name || '';
     let sex = req.body.sex || '';
-    let role = req.body.role || 'user';
+    let role = req.body.role || 'consumer';
 
     let retVal = await userHelper.createUserInDatabase({email: email, password: password, name: name, sex: sex, role:role});
     if (retVal.status === false)

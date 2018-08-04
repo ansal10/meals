@@ -29,7 +29,7 @@ const validateAndSanitizeSignupDetails = async function (email, name, password, 
         return {status: false, message: STRS.INVALID_PASSWORD};
     if(!models.User.rawAttributes.sex.values.includes(sex))
         return {status: false, message: STRS.INVALID_SEX};
-    if (role && !['user', 'manager'].includes(role))
+    if (role && !['consumer', 'manager'].includes(role))
         return {status: false, message: STRS.INVALID_ROLE};
 
 

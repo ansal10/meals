@@ -61,8 +61,8 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: {}
         },
         role: {
-            type: Sequelize.ENUM('admin', 'manager', 'user'),
-            defaultValue: 'user',
+            type: Sequelize.ENUM('admin', 'manager', 'consumer'),
+            defaultValue: 'consumer',
             validate:{
                 isValidField: (val, next)=>{
                     if(!User.rawAttributes.role.values.includes(val))

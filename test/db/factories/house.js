@@ -42,4 +42,4 @@ const data = async (props = {}) => {
  * @return {Object}       A user instance
  */
 module.exports = async (props = {}) =>
-    models.House.create(await data(props));
+    models.Meal.create(await data(props));

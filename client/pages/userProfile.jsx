@@ -129,7 +129,7 @@ class UserProfile extends Component {
                                                 name="role"
                                                 component={renderDropdownList}
                                                 label="User Type:"
-                                                data={[ 'admin', 'manager', 'user' ]}/>
+                                                data={[ 'admin', 'manager', 'consumer' ]}/>
                                         </div>
 
                                         {

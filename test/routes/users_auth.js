@@ -28,7 +28,7 @@ describe('Users', async () => {
         name: 'Jon dick',
         password: 'test1234',
         sex: 'male',
-        role: 'user',
+        role: 'consumer',
         status: 'active'
     };
     let user = null ;

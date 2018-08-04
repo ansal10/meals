@@ -159,7 +159,7 @@ class RegisterPage extends Component {
                                                 name="role"
                                                 component={renderDropdownList}
                                                 label="User Type:"
-                                                data={[ 'user', 'manager' ]}/>
+                                                data={[ 'consumer', 'manager' ]}/>
                                         </div>
 
                                         <div className="form_buttons">
