@@ -20,7 +20,8 @@ module.exports = {
                 status: 'active',
                 sex: 'male',
                 createdAt: moment().toISOString(),
-                updatedAt: moment().toISOString()
+                updatedAt: moment().toISOString(),
+                calorieGoal: faker.random.number() % 100000
             },
             {
                 name: 'Anas Manager',
@@ -36,7 +37,8 @@ module.exports = {
                 status: 'active',
                 sex: 'male',
                 createdAt: moment().toISOString(),
-                updatedAt: moment().toISOString()
+                updatedAt: moment().toISOString(),
+                calorieGoal: faker.random.number() % 100000
             },
             {
                 name: 'Anas User',
@@ -52,7 +54,8 @@ module.exports = {
                 status: 'active',
                 sex: 'male',
                 createdAt: moment().toISOString(),
-                updatedAt: moment().toISOString()
+                updatedAt: moment().toISOString(),
+                calorieGoal: faker.random.number() % 100000
             }
         ];
 
@@ -71,7 +74,8 @@ module.exports = {
                 status: _.sample(['active', 'inactive']),
                 sex: _.sample(['male', 'female', 'other']),
                 createdAt: moment().toISOString(),
-                updatedAt: moment().toISOString()
+                updatedAt: moment().toISOString(),
+	            calorieGoal: Number(Number(Math.random()*100000).toFixed(0)),
             })
         }
         try {

@@ -9,300 +9,256 @@ const _ = require('underscore');
 const util = require('util');
 const config = require('../../config/index');
 
-const LIST_ALL_HOUSE_ATTRIBUTES = ['id', 'title', 'country', 'city', 'locality', 'rent', 'builtArea', 'latitude',
-    'longitude', 'type', 'availability', 'images', 'UserId', 'availableFrom', 'tags',
-    'updatedAt'];
-const LIST_HOUSE_DETAILS_ATTRIBUTES = LIST_ALL_HOUSE_ATTRIBUTES.concat(['description', 'maintenance',
-    'carpetArea', 'availableFor', 'floor', 'address', 'powerBackup', 'features', 'furnishingStatus', 'createdAt']);
-
-const UPDATE_HOUSE_DETAILS_ATTRIBUTES = _.difference(LIST_HOUSE_DETAILS_ATTRIBUTES, ['id', 'createdAt', 'updatedAt', 'UserId']);
+const LIST_ALL_MEAL_ATTRIBUTES = ['id', 'title', 'description', 'calories', 'type', 'items', 'UserId', 'time',
+	'day', 'date', 'createdAt', 'updatedAt'];
+const LIST_MEAL_DETAILS_ATTRIBUTES = LIST_ALL_MEAL_ATTRIBUTES.concat([]);
+const UPDATE_MEAL_DETAILS_ATTRIBUTES = _.difference(LIST_MEAL_DETAILS_ATTRIBUTES, ['id', 'createdAt', 'updatedAt', 'UserId']);
 
 const Op = models.Sequelize.Op;
+
 Array.prototype.isArray = true;
 
+const isValidArray = function (v) {
+	return !!(v && v.length > 0);
+};
+
 const listAllMeal = async (user, params, page) => {
-    // let params = {};
-    let pageNumber = Number(page || 0);
+	let pageNumber = Number(page || 0);
 
-    // await Object.keys(models.Meal.attributes).forEach(async (attr) => {
-    //     if (searchParams[attr])
-    //         params[attr] = searchParams[attr];
-    // });
+	let meals = await models.Meal.findAll({
+		limit: config.pageLimit,
+		offset: config.pageLimit * pageNumber,
+		attributes: LIST_ALL_MEAL_ATTRIBUTES,
+		where: params,
+		order: [
+			// Will escape id and validate DESC against a list of valid direction parameters
+			['id', 'DESC'],
+		]
+	});
 
-    if (!params.availability) params.availability = 'yes';
+	let dates = _.uniq(_.map(meals, (m) => m.date));
+	let dailyData = await models.Meal.findAll({
+		where: {
+			date:{
+				[Op.in]: dates
+			}
+		},
+		attributes:[
+			'date',
+            [models.sequelize.fn('max', models.sequelize.col('calories')), 'dayCalories']
+		],
+		group: 'date'
+	});
+	let dailyDataObj = {};
+	dailyData.forEach((d)=>{
+		dailyDataObj[d.dataValues.date] = d.dataValues.dayCalories;
+	});
 
 
-    let meals = await models.Meal.findAll({
-        limit: config.pageLimit,
-        offset: config.pageLimit * pageNumber,
-        attributes: LIST_ALL_HOUSE_ATTRIBUTES,
-        where: params,
-        order: [
-            // Will escape id and validate DESC against a list of valid direction parameters
-            ['id', 'DESC'],
-        ]
-    });
-
-    meals = _.map(meals, (h) => {
-        if (h.images && h.images.length > 0)
-            h.images = [h.images[0]];
-        return h.dataValues;
-    });
-
-    for (let i = 0; i < meals.length; i++) {
-        meals[i].edit = permission.canUpdateMeal(user, meals[i])
-    }
-    return meals;
+	for (let i = 0; i < meals.length; i++) {
+		meals[i] = meals[i].dataValues;
+		meals[i].edit = true;
+		meals[i].dailyCalorieIntake = dailyDataObj[meals[i].date];
+		meals[i].dailyyCalorieGoal = user.calorieGoal;
+	}
+	return meals;
 };
 
 const mealDetails = async (user, mealId) => {
-    let meal = await models.Meal.findOne({where: {id: mealId}, attributes: LIST_HOUSE_DETAILS_ATTRIBUTES});
-    if (meal) {
-        meal = meal.dataValues;
-        meal.edit = permission.canUpdateMeal(user, meal);
-        return {
-            status: true,
-            message: '',
-            args: {meal: meal}
-        }
-    } else {
-        return {
-            status: false,
-            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId),
-            args: {}
-        }
-    }
+	let meal = await models.Meal.findOne({where: {id: mealId}, attributes: LIST_MEAL_DETAILS_ATTRIBUTES});
+	if (meal) {
+		meal = meal.dataValues;
+		meal.edit = permission.canUpdateMeal(user, meal);
+		return {
+			status: true,
+			message: '',
+			args: {meal: meal}
+		}
+	} else {
+		return {
+			status: false,
+			message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId),
+			args: {}
+		}
+	}
 };
 
 const updateMeal = async (user, mealParams, mealId) => {
-    let meal = await models.Meal.findOne({where: {id: mealId}});
-    if (meal && permission.canUpdateMeal(user, meal)) {
+	let meal = await models.Meal.findOne({where: {id: mealId}});
+	if (meal && permission.canUpdateMeal(user, meal)) {
 
-        try {
-            mealParams = _.pick(mealParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
-            Object.assign(meal, meal, mealParams);
-            await meal.validate();
-            await meal.save();
-            return {
-                status: true,
-                message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY,
-                args: {
-                    meal: meal
-                }
-            }
-        } catch (e) {
-            return {
-                status: false,
-                message: e.errors[0].message,
-                args: {}
-            }
-        }
+		try {
+			mealParams = _.pick(mealParams, UPDATE_MEAL_DETAILS_ATTRIBUTES);
+			Object.assign(meal, meal, mealParams);
+			await meal.validate();
+			await meal.save();
+			return {
+				status: true,
+				message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY,
+				args: {
+					meal: meal
+				}
+			}
+		} catch (e) {
+			return {
+				status: false,
+				message: e.errors[0].message,
+				args: {}
+			}
+		}
 
-    } else {
-        return {
-            status: false,
-            message: config.MESSAGES.UNAUTHORIZED_ACCESS,
-            args: {}
-        }
-    }
+	} else {
+		return {
+			status: false,
+			message: config.MESSAGES.UNAUTHORIZED_ACCESS,
+			args: {}
+		}
+	}
 };
 
 const createMealInDatabase = async (user, mealParams) => {
-    if (permission.canCreateMeal(user)) {
-        mealParams = _.pick(mealParams, UPDATE_HOUSE_DETAILS_ATTRIBUTES);
-        mealParams = Object.assign({}, mealParams, {UserId: user.id});
-        try {
-            let meal = await models.Meal.create(mealParams);
-            return {
-                status: true,
-                message: config.MESSAGES.RESOURCE_CREATED_SUCCESSFULLY,
-                args: {
-                    meal: meal
-                }
-            }
-        } catch (e) {
-            return {
-                status: false,
-                message: e.errors[0].message,
-                args: {}
-            }
-        }
-    } else {
-        return {
-            status: false,
-            message: config.MESSAGES.UNAUTHORIZED_ACCESS,
-            args: {}
-        }
-    }
+	if (permission.canCreateMeal(user)) {
+		mealParams = _.pick(mealParams, UPDATE_MEAL_DETAILS_ATTRIBUTES);
+		mealParams = Object.assign({}, mealParams, {UserId: user.id});
+		try {
+			let checkDuplicate = await models.Meal.count({
+				where: {
+					UserId: user.id,
+					date: mealParams.date,
+					type: mealParams.type
+				}
+			});
+			if (checkDuplicate > 0)
+				throw {errors: [{message: 'A meal type of ' + mealParams.type + ' already exist for date ' + mealParams.date}]}
+			let meal = await models.Meal.create(mealParams);
+			return {
+				status: true,
+				message: config.MESSAGES.RESOURCE_CREATED_SUCCESSFULLY,
+				args: {
+					meal: meal
+				}
+			}
+		} catch (e) {
+			return {
+				status: false,
+				message: e.errors[0].message,
+				args: {}
+			}
+		}
+	} else {
+		return {
+			status: false,
+			message: config.MESSAGES.UNAUTHORIZED_ACCESS,
+			args: {}
+		}
+	}
 };
 
 const searchMeal = async (user, searchParams, page) => {
-    // searchable params
+	try {
 
-    let isValidArray = function (v) {
-        return !!(v && v.length > 0);
-    };
+		let query = {};
 
-    try {
+		if (isValidArray(searchParams.calories)) {  // [1,1000]
+			query = Object.assign({}, query, {
+				rent: {
+					[Op.between]: searchParams.rent
+				}
+			});
+		}
+		if (isValidArray(searchParams.type)) {
+			query = Object.assign({}, query, {
+				type: {
+					[Op.in]: searchParams.type
+				}
+			});
+		}
+		if (isValidArray(searchParams.time)) {  // [03:21,12:12]
+			query = Object.assign({}, query, {
+				time: {
+					[Op.between]: searchParams.time
+				}
+			});
+		}
+		if (isValidArray(searchParams.day)) {  // [sunday, monday, tuesday]
+			query = Object.assign({}, query, {
+				day: {
+					[Op.in]: _.map(searchParams.day, (x) => {
+						return x.toLowerCase()
+					})
+				}
+			});
+		}
+		if (isValidArray(searchParams.date)) {  // [1,1000]
+			query = Object.assign({}, query, {
+				date: {
+					[Op.in]: searchParams.date
+				}
+			});
+		}
+		let userIds = filterApplicableUserIds(user, searchParams.UserId);
+		if (isValidArray(userIds)) {
+			query = Object.assign({}, query, {  // only acceptable ids
+				UserId: {
+					[Op.in]: userIds
+				}
+			});
+		}
 
-        let query = {};
-        if (searchParams.searchString && searchParams.searchString.trim().length > 0) {
-            let s = '%' + searchParams.searchString.trim() + '%';
-            query = Object.assign({}, query, {
-                [Op.or]: [
-                    {title: {[Op.iLike]: s}},
-                    {city: {[Op.iLike]: s}},
-                    {locality: {[Op.iLike]: s}},
-                    {country: {[Op.iLike]: s}}
-                ]
-            })
-        }
-
-        if (isValidArray(searchParams.rent)) {  // [1,1000]
-            query = Object.assign({}, query, {
-                rent: {
-                    [Op.between]: searchParams.rent
-                }
-            });
-        }
-        if (isValidArray(searchParams.builtArea)) {
-            query = Object.assign({}, query, {
-                builtArea: {
-                    [Op.between]: searchParams.builtArea
-                }
-            });
-        }
-        if (isValidArray(searchParams.carpetArea)) {
-            query = Object.assign({}, query, {
-                carpetArea: {
-                    [Op.between]: searchParams.carpetArea
-                }
-            });
-        }
-        if (isValidArray(searchParams.city)) {
-            query = Object.assign({}, query, {
-                city: {
-                    [Op.in]: searchParams.city
-                }
-            });
-        }
-        if (isValidArray(searchParams.locality)) {
-            query = Object.assign({}, query, {
-                locality: {
-                    [Op.in]: searchParams.locality
-                }
-            });
-        }
-        if (isValidArray(searchParams.country)) {
-            query = Object.assign({}, query, {
-                country: {
-                    [Op.in]: searchParams.country
-                }
-            });
-        }
-        if (isValidArray(searchParams.latitude)) {
-            query = Object.assign({}, query, {
-                latitude: {
-                    [Op.between]: searchParams.latitude
-                }
-            });
-        }
-        if (isValidArray(searchParams.longitude)) {
-            query = Object.assign({}, query, {
-                longitude: {
-                    [Op.between]: searchParams.longitude
-                }
-            });
-        }
-        if (isValidArray(searchParams.type)) {
-            query = Object.assign({}, query, {
-                type: {
-                    [Op.in]: searchParams.type
-                }
-            });
-        }
-        if (isValidArray(searchParams.availability)) {
-            query = Object.assign({}, query, {
-                availability: {
-                    [Op.in]: searchParams.availability
-                }
-            });
-        }
-
-        if (isValidArray(searchParams.availableFor)) {
-            query = Object.assign({}, query, {
-                availability: {
-                    [Op.in]: searchParams.availability
-                }
-            });
-        }
-        if (isValidArray(searchParams.availableFrom)) {
-            query = Object.assign({}, query, {
-                availableFrom: {
-                    [Op.gte]: searchParams.availableFrom
-                }
-            });
-        }
-        if (isValidArray(searchParams.floor)) {
-            query = Object.assign({}, query, {
-                floor: {
-                    [Op.in]: searchParams.floor
-                }
-            });
-        }
-        if (isValidArray(searchParams.powerBackup)) {
-            query = Object.assign({}, query, {
-                powerBackup: {
-                    [Op.in]: searchParams.powerBackup
-                }
-            });
-        }
-        if (isValidArray(searchParams.furnishingStatus)) {
-            query = Object.assign({}, query, {
-                furnishingStatus: {
-                    [Op.in]: searchParams.furnishingStatus
-                }
-            });
-        }
-        if (isValidArray(searchParams.UserId)) {
-            query = Object.assign({}, query, {
-                UserId: {
-                    [Op.in]: searchParams.UserId
-                }
-            })
-        }
-
-        return await listAllMeal(user, query, page);
-    } catch (e) {
-        return {
-            status: false,
-            message: 'Incompatible data passed',
-            args: {}
-        }
-    }
+		return await listAllMeal(user, query, page);
+	} catch (e) {
+		return {
+			status: false,
+			message: 'Incompatible data passed',
+			args: {}
+		}
+	}
 };
 
 const deleteMeal = async (user, mealId) => {
-    let meal = await models.Meal.findOne({where: {id: mealId}});
-    if (meal) {
-        if (permission.canUpdateMeal(user, meal)) {
-            await meal.destroy();
-            return {
-                status: true,
-                message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY
-            }
-        } else {
-            return {
-                status: false,
-                message: config.MESSAGES.UNAUTHORIZED_ACCESS
-            }
-        }
-    } else {
-        return {
-            status: false,
-            message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId)
-        }
-    }
+	let meal = await models.Meal.findOne({where: {id: mealId}});
+	if (meal) {
+		if (permission.canUpdateMeal(user, meal)) {
+			await meal.destroy();
+			return {
+				status: true,
+				message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY
+			}
+		} else {
+			return {
+				status: false,
+				message: config.MESSAGES.UNAUTHORIZED_ACCESS
+			}
+		}
+	} else {
+		return {
+			status: false,
+			message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, mealId)
+		}
+	}
+};
+
+const filterApplicableUserIds = async (user, userids) => {
+	if (user.role === 'consumer')
+		return [user.id];
+	else if (user.role === 'manager') {
+		let managee_users = await models.User.findAll({
+			where: {
+				managerId: {
+					[Op.in]: userids
+				}
+			},
+			attributes: ['id']
+		});
+		return _.map(managee_users, (u) => {
+			return u.id;
+		}).concat([user.id]);
+	} else {
+		if (isValidArray(userids))
+			return userids;
+		else return [];
+	}
+
 };
 
 module.exports.listAllMeal = listAllMeal;

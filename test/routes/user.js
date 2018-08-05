@@ -11,7 +11,7 @@ const userHelper = require('../../utilities/helpers/user_helper');
 const moment = require('moment');
 const models = require('../../db/models/index');
 const controllerMiddleware = require('../../utilities/controller_middlewares');
-let server = require('../../app');;
+let server = require('../../app');
 const sinon = require('sinon');
 const hashlib = require('hash.js');
 
@@ -77,11 +77,25 @@ describe('Users', async () => {
                 password: 'Sed',
                 sex: 'male',
                 role: 'consumer',
-                status: 'active'
+                status: 'active',
+                calorieGoal: -1
             };
 
             let retVal = await userHelper.createUserInDatabase(user);
             assert(retVal.status === false)
+
+        });
+
+        it('should signup with manager id', async () => {
+            let user = await userFactory({role: 'manager', calorieGoal: 100});
+            let df = Object.assign({}, defaultUser, {managerId:user.id, calorieGoal:500});
+            let res = await chai.request(server)
+                .post('/api/v1/user/signup')
+                .send(df);
+            res.should.have.status(201);
+            let newUser = await models.User.findOne({where:{email: df.email}})
+            assert(newUser.managerId === user.id);
+            assert(newUser.calorieGoal === 500);
 
         });
     });

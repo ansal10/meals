@@ -8,14 +8,29 @@ const canSeeAllUsers = (user) => {
 const canUpdateMeal = (user, meal) => {
     if( user.role === 'consumer' && meal.UserId === user.id)
         return true;
-    return user.role === 'admin';
+    else if (user.role === 'admin')
+        return true;
+    else {
+        return false;
+    }
 
 };
 
-const canUpdateUser = (user1, user2) => {
+const canUpdateUser = async (user1, user2) => {
     if(user1.id === user2.id) // can edit himself
         return true;
-    return user1.role === 'admin';
+    if ( user1.role === 'admin') return true;
+    if (user1.role === 'manager'){
+        let clients = await models.User.findAll({
+            where: {managerId: user1.id},
+            attributes: ['id']
+        });
+        let client_ids = _.map(managee_users, (u) => {
+            return u.id;
+        });
+        if (client_ids.indexOf(user2.id) >= 0) return true;
+    }
+    return false;
 };
 
 const canCreateMeal = (user) => {

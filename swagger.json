@@ -730,6 +730,16 @@
             "inactive"
           ]
         },
+        "calorieGoal":{
+          "type": "integer",
+          "example": 100,
+          "description": "Value of his calorie goal ( optional , default to 1 )"
+        },
+        "managerId": {
+          "type": "integer",
+          "example": 100,
+          "description": "ID of his manager ( optional , default to no manager assigned )"
+        },
         "createdAt": {
           "type": "string",
           "example": "ISO Format date"

@@ -62,9 +62,9 @@ module.exports = {
                 type: _.sample(models.Meal.rawAttributes.type.values),
                 items: randomItems(),
                 UserId: _.sample(users).id,
-                time: d.format(),
-                day: d.format(),
-                date: d.format()
+                time: d.format('HH:mm'),
+                day: d.format('dddd'),
+                date: d.format('YYYY-MM-DD')
             };
             meals.push(data);
         }

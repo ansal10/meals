@@ -39,6 +39,15 @@ module.exports = {
             sex: {
                 type: Sequelize.ENUM('male', 'female', 'other')
             },
+	        managerId: {
+		        type: Sequelize.INTEGER,
+		        allowNull: true
+	        },
+            calorieGoal:{
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                defaultValue: 0
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

@@ -21,8 +21,10 @@ router.post('/signup', async (req, res, next) => {
     let name = req.body.name || '';
     let sex = req.body.sex || '';
     let role = req.body.role || 'consumer';
+    let managerId = req.body.managerId ;
+    let calorieGoal = req.body.calorieGoal ;
 
-    let retVal = await userHelper.createUserInDatabase({email: email, password: password, name: name, sex: sex, role:role});
+    let retVal = await userHelper.createUserInDatabase({email: email, password: password, name: name, sex: sex, role:role, managerId: managerId, calorieGoal: calorieGoal});
     if (retVal.status === false)
 	    genUtil.sendJsonResponse(res, 400, retVal.message, null);
     else {

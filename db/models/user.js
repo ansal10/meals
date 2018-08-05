@@ -99,7 +99,37 @@ module.exports = (sequelize, Sequelize) => {
         updatedAt: {
             allowNull: false,
             type: Sequelize.DATE
-        }
+        },
+        managerId: {
+	        type: Sequelize.INTEGER,
+            allowNull: true,
+            validate:{
+	            isValidField: async (val, next) => {
+	                if (val){
+	                    let user = await User.findOne({where:{id: val, role: 'manager'}});
+                        if (!user)
+                            next('Sorry the manager id is not valid');
+                        else next();
+                    }
+                }
+            }
+        },
+	    calorieGoal:{
+		    type: Sequelize.DOUBLE,
+		    allowNull: false,
+		    defaultValue: 1,
+		    validate: {
+			    min:{
+				    args: [1],
+				    msg: 'Minimum calories Goal should be 1'
+			    },
+			    max:{
+				    args: [100000],
+				    msg: 'Maximum calories can be 100000'
+			    }
+		    }
+
+	    },
 
     }, {});
     User.associate = function (models) {

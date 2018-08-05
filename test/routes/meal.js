@@ -16,39 +16,22 @@ const controllerMiddleware = require('../../utilities/controller_middlewares');
 const models = require('../../db/models/index');
 const server = require('../../app');
 const request = require('supertest');
+const _ = require('underscore');
 
 chai.use(chaiHttp);
 
+describe('Meals', async () => {
 
-describe('Meal', async () => {
-
+    let d = moment().add(faker.random.number()%10000 - 5000, 'minutes');
     let defaultMealParams = {
-        title: faker.name.firstName() + faker.name.lastName(),
+        title: faker.name.findName() + faker.name.findName(),
         description: "This is just a test desription that will check what is valid description here around",
-        rent: faker.random.number()%9000 + 500,
-        maintenance:{
-            monthly:10,
-            brokerage: 100,
-            deposit: 2500
-        },
-        builtArea: faker.random.number()%9000 + 500,
-        carpetArea: faker.random.number()%9000 + 500,
-        city: faker.address.city(),
-        locality: faker.address.streetName(),
-        country: faker.address.country().split(' ')[0],
-        address: faker.address.streetName() + " " + faker.address.city,
-        latitude: faker.address.latitude(),
-        longitude: faker.address.longitude(),
-        type: '2bhk',
-        availability: 'yes',
-        availableFor: 'all',
-        availableFrom: moment().toISOString(),
-        floor: 2,
-        powerBackup: 'full',
-        features: ['Cover car parking', 'Centrally air conditioned', '24 hours security'],
-        tags: [faker.random.arrayElement(), faker.random.arrayElement(), faker.random.arrayElement()],
-        images: [faker.image.imageUrl(), faker.image.imageUrl(), faker.image.imageUrl()],
-        furnishingStatus: 'furnished',
+        calories: faker.random.number()%10000,
+        type: _.sample(['breakfast', 'lunch', 'dinner', 'evening_snacks']),
+        items: ['Eggs', 'Chicken'],
+        time: d.format('HH:mm'),
+        day: d.format('dddd'),
+        date: d.format('YYYY-MM-DD'),
     };
     let user = null;
     const authenticatedUser = request.agent(server);
@@ -64,15 +47,13 @@ describe('Meal', async () => {
             .post('/api/v1/user/login')
             .send({"email": user.email, "password": "1234"});
 
-        res.status
-
     });
 
     describe('/search POST Search meals', async () => {
 
-        it('it should return all available property user successful', async () => {
-            await mealFactory();
-            await mealFactory();
+        it('it should return all meals of user successful', async () => {
+            await mealFactory({UserId: user.id});
+            await mealFactory({UserId: user.id});
             let res = await authenticatedUser
                 .post('/api/v1/meal/search')
                 .send({});

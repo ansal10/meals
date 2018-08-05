@@ -8,12 +8,12 @@ const moment = require('moment');
 const util = require('util');
 const permission = require('../permisson_utility');
 const _ = require('underscore');
-const ADMIN_UPDATE_ALLOWED_FIELDS = ['role', 'status', 'sex', 'name'];
-const SELF_UPDATE_ALLOWED_FIELDS = ['name', 'sex'];
+const SELF_UPDATE_ALLOWED_FIELDS = ['sex', 'name', 'email', 'managerId', 'calorieGoal'];
+const ADMIN_UPDATE_ALLOWED_FIELDS = SELF_UPDATE_ALLOWED_FIELDS.concat(['role', 'status']);
 const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt'];
 const config = require('../../config/index');
+const notifier = require('../../utilities/notifier/index');
 const Op = models.Sequelize.Op;
-
 
 const TIME = {
     EMAIL_TOKEN_EXPIRATION: 24 * 60 * 60, // seconds
@@ -21,11 +21,26 @@ const TIME = {
 
 };
 
+const STRS = {
+	INVALID_EMAIL: 'Your email is invalid',
+	NAME_MIN_LENGTH: 6,
+	INVALID_NAME: 'Name is invalid. it should be atleast 6 chars long',
+	PASSWORD_MIN_LENGTH: 6,
+	INVALID_PASSWORD: 'Password should be atleast 6 digits long',
+	EMAIL_ALREADY_EXIST: 'Email already exist. if you forgot your password you can request for one.',
+	EMAIL_PASSWORD_NOT_MATCHED: 'Email and password combination didn\'t matched',
+	INVALID_SEX: 'Sex is invalid. Accepted values are '+ models.User.rawAttributes.sex.values,
+	EMAIL_NOT_VERIFIED: 'Your email is not verified',
+	LOGGED_IN_SUCCESSFUL: 'You have been logged in successful',
+	INACTIVE_ACCOUNT: 'Your account have been deactivated',
+	INVALID_ROLE: 'You can only singup as consumer or realtor',
+};
 
 const createUserInDatabase = async function (userParams) {
 
     let uuid = uuidv4();
     try {
+
         let user = new models.User({
             email: userParams.email || '',
             name: userParams.name || '',
@@ -42,9 +57,12 @@ const createUserInDatabase = async function (userParams) {
             sex: userParams.sex || '',
             status: models.User.rawAttributes.status.defaultValue,
             role: userParams.role || models.User.rawAttributes.role.defaultValue,
+            calorieGoal: userParams.calorieGoal || models.User.rawAttributes.calorieGoal.defaultValue,
+            managerId: userParams.managerId
         });
 
 	    user.validate();
+	    await user.save();
 
         return {
             status: true,
@@ -164,21 +182,36 @@ const updateUserDetails = async (updater, userArgs, userId) => {
     let user = await models.User.findOne({where: {id: userId}});
     if (!user)
         return {status: false, message:util.format( config.MESSAGES.RESOURCE_NOT_FOUND, userId)};
-    if (permission.canUpdateUser(updater, user)) {
+    if (await permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
-            if (updater.id == userId && updater.role != 'admin')  // updating self
+            let emailUpdate = false;
+            if (updater.role != 'admin')  // updating self or manager updating client
                 updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
             else
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
 
+            emailUpdate = user.email !== userArgs.email;
             Object.assign(user, user, updateVals);
-            await user.validate({skip: ['email']});
+            if (emailUpdate) {
+                await user.validate();
+                user.emailAttributes = {
+                    token: uuidv4(),
+                    created: moment().toISOString(),
+                    expired: moment().add(TIME.EMAIL_TOKEN_EXPIRATION, 'seconds').toISOString(),
+                    verified: false
+                }
+            }
+            else
+                await user.validate({skip: ['email']});
+
             await user.save();
+            if (emailUpdate)
+                notifier.notifyEmailConfirmation(retVal.args.user);
 
             return {
                 status: true,
-                message: 'Permissible Fields are updated'
+                message: emailUpdate ? 'Field updated. Since your have also updated your email your need to confirm by clicking confirmation link in your email inbox' : 'Permissible Fields are updated'
             }
         } catch (e) {
             return {

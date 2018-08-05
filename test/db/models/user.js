@@ -14,7 +14,7 @@ describe('User model', () => {
         await truncate();
     });
 
-    it('should allow realtor to assign meal', async () => {
+    it('should allow manager to assign meal', async () => {
         user = await userFactory();
         console.log("user id is " + user.id);
         let h2 = await mealFactory();
