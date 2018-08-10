@@ -7,6 +7,7 @@ const urlcodeJson = require('urlcode-json');
 const router = express.Router();
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
+const config = require('../../../config/index');
 
 const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'managerId', 'calorieGoal', 'createdAt', 'updatedAt'];
 
@@ -23,6 +24,7 @@ router.post('/signup', async (req, res, next) => {
     let role = req.body.role || 'consumer';
     let managerId = req.body.managerId ;
     let calorieGoal = req.body.calorieGoal ;
+
 
     let retVal = await userHelper.createUserInDatabase({email: email, password: password, name: name, sex: sex, role:role, managerId: managerId, calorieGoal: calorieGoal});
     if (retVal.status === false)
@@ -43,10 +45,9 @@ router.post('/login', async (req, res, next) => {
     if (retVal.status === false)
         genUtil.sendJsonResponse(res, 400, retVal.message, null);
     else {
-        let session = req.session;
-        session.user = retVal.args.user;
-        session.userid = session.user.id;
-        genUtil.sendJsonResponse(res, 200, retVal.message, retVal.args.user );
+        let jwtToken = jwt.sign({user_id: retVal.args.user.id}, config.JWT_SECRET);
+        res.cookie('access_token', jwtToken);
+        genUtil.sendJsonResponse(res, 200, retVal.message, Object.assign({}, retVal.args.user, {jwt: jwtToken} ))
     }
 });
 

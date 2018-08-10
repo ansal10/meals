@@ -782,6 +782,11 @@
           "example": 100,
           "description": "ID of his manager ( optional , default to no manager assigned )"
         },
+        "jwt":{
+          "type":"string",
+          "example": "kewopfjewopfjnewfnewofnewfinewoinewinfeowinfewoinfew",
+          "description": "Authentication token either setup in cookie or headers for authentication"
+        },
         "createdAt": {
           "type": "string",
           "example": "ISO Format date"
