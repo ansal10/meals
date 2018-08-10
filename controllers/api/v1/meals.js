@@ -22,7 +22,7 @@ router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
     let meals = await mealHelper.mealDetails(user, {ids: [req.params.id]}, 0);
     if (meals.length === 1)
-        genUtil.sendJsonResponse(res, 200, retVal.message, retVal.args.meal);
+        genUtil.sendJsonResponse(res, 200, '', meals[0]);
     else
         genUtil.sendJsonResponse(res, 400, 'Unauthorized access');
 });
