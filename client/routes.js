@@ -34,15 +34,10 @@ export default [
         ]
     },
     {
-        path: '/properties',
+        path: '/meals',
         ...App,
         routes: [
             {
-                path: '/properties/map',
-                ...Properties
-            },
-            {
-                path: '/properties',
                 ...Properties
             }
         ]

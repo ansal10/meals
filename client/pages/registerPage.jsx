@@ -154,12 +154,23 @@ class RegisterPage extends Component {
                                                 data={[ 'male', 'female' ]}/>
                                         </div>
 
+
                                         <div className="form_row">
                                             <Field
-                                                name="role"
-                                                component={renderDropdownList}
-                                                label="User Type:"
-                                                data={[ 'consumer', 'manager' ]}/>
+                                                name="managerId"
+                                                type="number"
+                                                component={renderTextField}
+                                                label="Manager ID:"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="calorieGoal"
+                                                component={renderTextField}
+                                                type="number"
+                                                label="Calorie goal:"
+                                            />
                                         </div>
 
                                         <div className="form_buttons">

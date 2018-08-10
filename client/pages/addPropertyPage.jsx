@@ -11,7 +11,7 @@ import InternalTextBanner from './../components/banners/internalTextBanner';
 
 import axiosInstance from '../client';
 import {renderDateTimePicker, renderDropdownList} from "../common/forms/input-types/index";
-import {CREATE_PROPERTY_ENDPOINT, UPDATE_PROPERTY_ENDPOINT} from "../endpoints";
+import {CREATE_MEAL_ENDPOINT, UPDATE_MEAL_ENDPOINT} from "../endpoints";
 import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
 import UploadImage from "../components/uploadImage";
 import {Gen} from "../helpers/gen";
@@ -92,7 +92,7 @@ class AddPropertyPage extends Component {
         }
 
         const id = this.props.match.params.id || null;
-        const endpoint = this.getPageType() === "Edit" ? UPDATE_PROPERTY_ENDPOINT + "/" + id : CREATE_PROPERTY_ENDPOINT;
+        const endpoint = this.getPageType() === "Edit" ? UPDATE_MEAL_ENDPOINT + "/" + id : CREATE_MEAL_ENDPOINT;
 
         const postData = {id, images, title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus};
 

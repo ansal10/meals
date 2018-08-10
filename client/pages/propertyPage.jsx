@@ -14,7 +14,7 @@ import axiosInstance from '../client';
 import TitleInfo from "../components/titleInfo";
 import {Gen} from "../helpers/gen";
 import {Link} from "react-router-dom";
-import {DELETE_PROPERTY_ENDPOINT} from "../endpoints";
+import {DELETE_MEAL_ENDPOINT} from "../endpoints";
 import {notify} from "react-notify-toast";
 import { withRouter } from 'react-router-dom'
 
@@ -30,7 +30,7 @@ class Property extends Component {
     }
 
     deleteProperty() {
-        axiosInstance.delete(DELETE_PROPERTY_ENDPOINT + "/" + this.props.match.params.id)
+        axiosInstance.delete(DELETE_MEAL_ENDPOINT + "/" + this.props.match.params.id)
             .then((success) => {
                 console.log(success.data.success.message);
                 notify.show(success.data.success.message, 'success');
@@ -193,7 +193,7 @@ class Property extends Component {
                     </div>
                     </ReactCSSTransitionGroup>
                 </div>
-            ); 
+            );
         } else {
             return (
                 <div className="property-page">
@@ -205,7 +205,7 @@ class Property extends Component {
                         <div className="grid">
                             <div className="column column_12_12">
                                 <div className="post">
-                                   
+
                                 </div>
                             </div>
                         </div>

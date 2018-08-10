@@ -158,7 +158,7 @@ class Filter extends Component {
                 </div>
 
                     {
-                        Gen.isUserRealorOrAdmin(this.props.user) ?
+                        Gen.isUserManagerOrAdmin(this.props.user) ?
                         <div className="form_row form_checkbox_row">
                             <Field
                                 name="UserId"

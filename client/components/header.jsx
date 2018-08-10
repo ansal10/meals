@@ -44,12 +44,12 @@ class Header extends Component {
     componentWillUnmount() {
         window.removeEventListener('scroll', this.listenScrollEvent);
     }
-    
+
     render() {
         const {user} = this.props;
 
         return (
-            
+
             <header onScroll={this.listenScrollEvent} className={classNames({'scrollActive': this.state.vPos > 0, 'mobileNavActive': this.state.mobileToggle })}>
 
                 <div className="wrap">
@@ -76,17 +76,15 @@ class Header extends Component {
                                 </li>
 
                                 {
-                                    Gen.isUserAdmin(user) ?
+                                    Gen.isUserManagerOrAdmin(user) ?
                                         <li>
                                             <NavLink activeClassName="active" to="/users">Users</NavLink>
                                         </li> : ''
-                                }{
-
-                                    Gen.isUserRealorOrAdmin(user) ?
-                                        <li>
-                                            <NavLink activeClassName="active" to="/property/add">Add Property</NavLink>
-                                        </li> : ''
                                 }
+
+                                <li>
+                                    <NavLink activeClassName="active" to="/meal/add">Add Meal</NavLink>
+                                </li> : ''
 
                                 {
                                     user ? <li className="last">
@@ -98,11 +96,11 @@ class Header extends Component {
                     </div>
 
                 </div>
-            
+
             </header>
-            
+
         );
-    }  
+    }
 };
 
 function mapStateToProps(state){

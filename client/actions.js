@@ -1,5 +1,5 @@
 import {
-    GET_PROPERTY_ENDPOINT, GET_PROPERTIES_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS,
+    GET_MEAL_ENDPOINT, GET_MEALS_ENDPOINT, SIGN_UP_ENDPOINT_POST, GET_USER_DETAILS,
     LOGOUT_USER, GET_OTHER_USER_DETAILS, GET_USERS_ENDPOINT
 } from './endpoints';
 import {actions} from './constants';
@@ -51,7 +51,7 @@ export const clearUserDetails = () => async (dispatch, getState, api) => {
 
 export const fetchPropertyAction = (productID) => async (dispatch, getState, api) => {
 
-    await api.get(GET_PROPERTY_ENDPOINT+'/'+productID).then(response => {
+    await api.get(GET_MEAL_ENDPOINT+'/'+productID).then(response => {
         console.log(response)
         dispatch({
             type: 'FETCH_PROPERTY',
@@ -89,7 +89,7 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
     const state = getState();
     const nextUrl = state.properties.nextUrl || null;
 
-    const endpoint = nextUrl ? nextUrl : GET_PROPERTIES_ENDPOINT;
+    const endpoint = nextUrl ? nextUrl : GET_MEALS_ENDPOINT;
 
     const merge = nextUrl ? true : false;
 

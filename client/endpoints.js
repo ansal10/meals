@@ -1,10 +1,10 @@
 const config = require('../webConfig.json');
 
-export const GET_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
-export const GET_PROPERTIES_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal/search';
-export const CREATE_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
-export const UPDATE_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
-export const DELETE_PROPERTY_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
+export const GET_MEAL_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
+export const GET_MEALS_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal/search';
+export const CREATE_MEAL_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
+export const UPDATE_MEAL_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
+export const DELETE_MEAL_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
 export const SIGN_UP_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/signup';
 export const LOG_IN_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/login';
 export const UPDATE_USER_ENDPOINT_PUT = config.axiosInstance_baseURL+'/api/v1/user';

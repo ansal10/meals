@@ -12,7 +12,7 @@ export class Gen {
         return user && user.role && (user.role === 'admin');
     }
 
-    static isUserRealorOrAdmin(user) {
+    static isUserManagerOrAdmin(user) {
         return user && user.role && (user.role === 'manager' || user.role === 'admin');
     }
 
