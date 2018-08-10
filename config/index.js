@@ -31,7 +31,8 @@ module.exports = {
         SIGNUP_SUCCESSFUL_MESSAGE: 'Signup successful',
         PASSWORD_MIN_LENGTH: 6,
         INVALID_PASSWORD: 'Password should be at least 6 digits long.',
-        RECORD_DELETED_SUCCESSFULLY: 'Record is deleted successfully'
+        RECORD_DELETED_SUCCESSFULLY: 'Record is deleted successfully',
+        MANAGER_NOT_FOUND: 'Manager not found'
     },
     pageLimit: 50
 

@@ -79,7 +79,6 @@ const createUserInDatabase = async function (userParams) {
     }
 };
 
-
 const verifyEmail = async function (email, email_token) {
     let user = await models.User.findOne({where: {email: validator.trim(email, '').toLowerCase()}});
     if (!user)
@@ -180,18 +179,33 @@ const listAllUsers = async (pageNumber, pageLimit) => {
 
 const updateUserDetails = async (updater, userArgs, userId) => {
     let user = await models.User.findOne({where: {id: userId}});
+    let manager = userArgs.managerId ? await models.User.findOne({where: {id: userArgs.managerId}}) : null;
+
     if (!user)
         return {status: false, message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, userId)};
     if (await permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
-            let emailUpdate = false;
+            let emailUpdate;
             if (updater.role != 'admin')  // updating self or manager updating client
                 updateVals = _.pick(userArgs, SELF_UPDATE_ALLOWED_FIELDS);
             else
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
 
-            emailUpdate = user.email !== userArgs.email;
+            emailUpdate = userArgs.email ?  user.email !== userArgs.email : false;
+            let managerAssignError = permission.canBeManagerToUserMessage(manager, user);
+            if (managerAssignError != null){
+                return {
+                    status: false,
+                    message: managerAssignError
+                }
+            }
+            if (userArgs.managerId && manager === null){
+                return{
+                    status: false,
+                    message: config.MESSAGES.MANAGER_NOT_FOUND
+                }
+            }
             Object.assign(user, user, updateVals);
             if (emailUpdate) {
                 await user.validate();
@@ -303,7 +317,6 @@ const authenticatedUser = async function (email, password) {
         }
     };
 };
-
 
 module.exports.createUserInDatabase = createUserInDatabase;
 module.exports.verifyEmail = verifyEmail;

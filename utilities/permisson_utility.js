@@ -46,10 +46,29 @@ const canSeeUserDetails = (user1, user2) => {
 const canDeleteUser = (user1, user2) =>{
     return user1.role === 'admin';
 
-}
+};
+
+const canBeManagerToUserMessage = (manager, user) => {  //
+    if (manager == null)
+        return null;
+
+    if (manager.role === 'manager') {
+        if (manager.id === user.id){  // cannot be manager of self
+            return 'Cannot assign yourself as a manager to yourself';
+        }
+        else if (user.role === 'manager' || user.role === 'consumer'){
+            return null;  // yse can manage
+        }else {
+            return 'Manager cannot be assigned to admin'
+        }
+    }else {
+        return 'The manager id is invalid or the person is not a manager';
+    }
+};
 module.exports.canSeeAllUsers = canSeeAllUsers;
 module.exports.canUpdateMeal = canUpdateMeal;
 module.exports.canUpdateUser = canUpdateUser;
 module.exports.canCreateMeal = canCreateMeal;
 module.exports.canSeeUserDetails = canSeeUserDetails;
 module.exports.canDeleteUser = canDeleteUser;
+module.exports.canBeManagerToUserMessage = canBeManagerToUserMessage;
