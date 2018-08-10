@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 export class Gen {
     static objectCopy(obj) {
@@ -6,6 +7,18 @@ export class Gen {
 
     static round(num) {
         return Math.round(num);
+    }
+
+    static getTimeFromISODate(date) {
+        return moment(date).format("hh:mm");
+    }
+
+    static getDateFromISODate(date) {
+        return moment(date).format("YYYY-MM-DD");
+    }
+
+    static getDayFromISODate(date) {
+        return Gen.getDayFromNumber(moment(date).day());
     }
 
     static isUserAdmin(user) {
@@ -83,6 +96,27 @@ export class Gen {
                 return "Dec";
             default:
                 return "-"
+        }
+    }
+
+    static getDayFromNumber(day) {
+        switch(day) {
+            case "1":
+                return "Mondday";
+            case "2":
+                return "Tuesday";
+            case "3":
+                return "Wednesday";
+            case "4":
+                return "Thursday";
+            case "5":
+                return "Friday";
+            case "6":
+                return "Saturday";
+            case "7":
+                return "Sunday";
+            default:
+                return "Monday"
         }
     }
 }

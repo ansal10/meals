@@ -81,20 +81,18 @@ class AddMealPage extends Component {
 
         const images = data.images ? Gen.mergeArray(data.images, this.state.images) : this.state.images;
 
-      let {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus} = data;
+        let {title, description, calories, type, items, mealTime, status} = data;
 
-      if(!latitude) {
-          latitude = this.state.lat;
-      }
-
-        if(!longitude) {
-            longitude = this.state.lng;
-        }
+        console.log(mealTime);
+        let time = Gen.getTimeFromISODate(mealTime);
+        let date = Gen.getDateFromISODate(mealTime);
+        let day = Gen.getDayFromISODate(mealTime);
 
         const id = this.props.match.params.id || null;
+
         const endpoint = this.getPageType() === "Edit" ? UPDATE_MEAL_ENDPOINT + "/" + id : CREATE_MEAL_ENDPOINT;
 
-        const postData = {id, images, title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus};
+        const postData = {id, title, description, calories, type, items, time, day, date, status};
 
         if(this.getPageType() === "Edit") {
             axiosInstance.put(endpoint, postData)
@@ -124,8 +122,8 @@ class AddMealPage extends Component {
                     })
                 })
                 .catch((error) => {
-                    console.log(error.response.data.error.message);
-                    notify.show(error.response.data.error.message, 'error');
+                    console.log(error.message);
+                    notify.show(error.message, 'error');
                     this.toggle();
                 });
         }
@@ -179,201 +177,56 @@ class AddMealPage extends Component {
                                         <UploadImage images={mealData ? mealData.images : []} addImage={this.addImage.bind(this)} removeImage={this.removeImage.bind(this)}/>
                                         <div className="form_row">
                                             <Field
-                                                name="country"
+                                                name="description"
                                                 component={renderTextField}
-                                                label="country:"
+                                                label="Description:"
                                             />
                                         </div>
 
-                                        <div className="form_row">
-                                            <Field
-                                                name="city"
-                                                component={renderTextField}
-                                                label="city:"
-                                            />
-                                        </div>
 
                                         <div className="form_row">
                                             <Field
-                                                name="locality"
+                                                name="calories"
                                                 component={renderTextField}
-                                                label="locality:"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="rent"
-                                                component={renderTextField}
-                                                label="rent:"
+                                                label="Calories:"
                                                 type="number"
                                             />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="builtArea"
-                                                component={renderTextField}
-                                                label="builtArea:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="carpetArea"
-                                                component={renderTextField}
-                                                label="carpetArea:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="latitude"
-                                                component={renderTextField}
-                                                label="latitude:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="longitude"
-                                                component={renderTextField}
-                                                label="longitude:"
-                                                type="number"
-                                            />
-                                        </div>
-
-
-                                        <div className="form_row">
-                                            <div className="form_label">
-                                                <label>Enter location</label>
-                                            </div>
-                                        <LocationSearchInput latlngReceived={this.latlngReceived.bind(this)}/>
                                         </div>
 
                                         <div className="form_row">
                                             <Field
                                                 name="type"
                                                 component={renderDropdownList}
-                                                label="type:"
-                                                data={[ '1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+' ]}/>
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="availability"
-                                                component={renderDropdownList}
-                                                label="availability:"
-                                                data={[ 'yes', 'no', 'archive' ]}/>
+                                                label="Type:"
+                                                data={[ 'breakfast', 'lunch', 'snacks', 'dinner', 'others' ]}/>
                                         </div>
 
 
                                         <div className="form_row">
                                             <Field
-                                                name="availableFrom"
+                                                name="mealTime"
                                                 component={renderDateTimePicker}
-                                                showTime={false}
-                                                label="availableFrom:"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="description"
-                                                component={renderTextarea}
-                                                label="description:"
+                                                showTime={true}
+                                                label="Meal Time:"
                                             />
                                         </div>
 
 
                                         <div className="form_row">
                                             <Field
-                                                name="availableFor"
+                                                name="status"
                                                 component={renderDropdownList}
-                                                label="availableFor:"
-                                                data={[ 'all', 'family', 'couples', 'bachelors' ]}/>
+                                                label="Status:"
+                                                data={[ 'exact', 'over', 'below' ]}/>
                                         </div>
 
-                                        <div className="form_row">
-                                            <Field
-                                                name="floor"
-                                                component={renderTextField}
-                                                label="floor:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="address"
-                                                component={renderTextarea}
-                                                label="address:"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="powerBackup"
-                                                component={renderDropdownList}
-                                                label="powerBackup:"
-                                                data={[ 'full', 'partial', 'no' ]}/>
-                                        </div>
-
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="maintenance.monthly"
-                                                component={renderTextField}
-                                                label="maintenance monthly:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="maintenance.deposit"
-                                                component={renderTextField}
-                                                label="maintenance deposit:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="maintenance.brokerage"
-                                                component={renderTextField}
-                                                label="maintenance brokerage:"
-                                                type="number"
-                                            />
-                                        </div>
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="maintenance.annually"
-                                                component={renderTextField}
-                                                label="maintenance annually:"
-                                                type="number"
-                                            />
-                                        </div>
 
                                         <div className="form_row">
                                             <Field
                                                 name="features"
                                                 component={renderMultiselect}
                                                 label="features:"
-                                                data={[ 'Water Purifier','Lift','Water storage','Visitor Parking','Park','Security Personnel','Waste disposal','Rain water harvesting','Gym','tv','wardrobe','bed','dinning table','fridge','sofa','stove','washing machine' ]}/>
-                                        </div>
-
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="furnishingStatus"
-                                                component={renderDropdownList}
-                                                label="furnishingStatus:"
-                                                data={[ 'furnished', 'unfurnished', 'semifurnished' ]}/>
+                                                data={[ 'eggs', 'fruits', 'other', 'rice']}/>
                                         </div>
 
 
