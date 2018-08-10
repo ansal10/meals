@@ -56,7 +56,7 @@ module.exports = (DataType, Sequelize) => {
 
         },
         type:{
-	        type:Sequelize.ENUM('breakfast', 'lunch', 'evening_snacks', 'dinner'),
+	        type:Sequelize.ENUM('breakfast', 'lunch', 'snacks', 'dinner', 'others'),
             trim: true,
             validate:{
                 isValidField: (val, next)=>{

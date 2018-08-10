@@ -133,8 +133,17 @@ router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
         genUtil.sendJsonResponse(res, 200, '', retVal.args.user);
     else
         genUtil.sendJsonResponse(res, 400, retVal.message, null);
-
 });
 
+router.delete('/:id', middlewares.isAuthenticated, async (req, res, next) => {
+   let user = req.session.user;
+   let userId = req.params.id;
+
+   let retVal = await userHelper.deleteUser(user, userId);
+   if (retVal.status)
+       genUtil.sendJsonResponse(res, 200, retVal.message, null);
+    else
+        genUtil.sendJsonResponse(res, 400, retVal.message, null);
+});
 
 module.exports = router;

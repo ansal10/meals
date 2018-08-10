@@ -22,18 +22,18 @@ const TIME = {
 };
 
 const STRS = {
-	INVALID_EMAIL: 'Your email is invalid',
-	NAME_MIN_LENGTH: 6,
-	INVALID_NAME: 'Name is invalid. it should be atleast 6 chars long',
-	PASSWORD_MIN_LENGTH: 6,
-	INVALID_PASSWORD: 'Password should be atleast 6 digits long',
-	EMAIL_ALREADY_EXIST: 'Email already exist. if you forgot your password you can request for one.',
-	EMAIL_PASSWORD_NOT_MATCHED: 'Email and password combination didn\'t matched',
-	INVALID_SEX: 'Sex is invalid. Accepted values are '+ models.User.rawAttributes.sex.values,
-	EMAIL_NOT_VERIFIED: 'Your email is not verified',
-	LOGGED_IN_SUCCESSFUL: 'You have been logged in successful',
-	INACTIVE_ACCOUNT: 'Your account have been deactivated',
-	INVALID_ROLE: 'You can only singup as consumer or realtor',
+    INVALID_EMAIL: 'Your email is invalid',
+    NAME_MIN_LENGTH: 6,
+    INVALID_NAME: 'Name is invalid. it should be atleast 6 chars long',
+    PASSWORD_MIN_LENGTH: 6,
+    INVALID_PASSWORD: 'Password should be atleast 6 digits long',
+    EMAIL_ALREADY_EXIST: 'Email already exist. if you forgot your password you can request for one.',
+    EMAIL_PASSWORD_NOT_MATCHED: 'Email and password combination didn\'t matched',
+    INVALID_SEX: 'Sex is invalid. Accepted values are ' + models.User.rawAttributes.sex.values,
+    EMAIL_NOT_VERIFIED: 'Your email is not verified',
+    LOGGED_IN_SUCCESSFUL: 'You have been logged in successful',
+    INACTIVE_ACCOUNT: 'Your account have been deactivated',
+    INVALID_ROLE: 'You can only sign-up as consumer',
 };
 
 const createUserInDatabase = async function (userParams) {
@@ -61,8 +61,8 @@ const createUserInDatabase = async function (userParams) {
             managerId: userParams.managerId
         });
 
-	    user.validate();
-	    await user.save();
+        user.validate();
+        await user.save();
 
         return {
             status: true,
@@ -133,7 +133,7 @@ const resetPassword = async function (email, password_token, password) {
         let uuid = uuidv4();
         user.passwordAttributes = {
             salt: uuid,
-            hash: hashlib.sha256( password + uuid).digest('hex'),
+            hash: hashlib.sha256(password + uuid).digest('hex'),
             updated: moment().toISOString()
         };
         await user.save();
@@ -181,7 +181,7 @@ const listAllUsers = async (pageNumber, pageLimit) => {
 const updateUserDetails = async (updater, userArgs, userId) => {
     let user = await models.User.findOne({where: {id: userId}});
     if (!user)
-        return {status: false, message:util.format( config.MESSAGES.RESOURCE_NOT_FOUND, userId)};
+        return {status: false, message: util.format(config.MESSAGES.RESOURCE_NOT_FOUND, userId)};
     if (await permission.canUpdateUser(updater, user)) {
         try {
             let updateVals = {};
@@ -238,6 +238,15 @@ const findUserDetails = async (requester, userid) => {
     }
 };
 
+const deleteUser = async (requester, userId) => {
+    let u = await models.User.findOne({where: {id: userid}});
+    if (!u)
+        return {status: false, message: config.MESSAGES.RESOURCE_NOT_FOUND};
+    if (permission.canDeleteUser(requester, u))
+        return {status: true, message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY, args: {user: u}};
+    else return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
+}
+
 const searchUsers = async (requester, searchParams) => {
     if (permission.canSeeAllUsers(requester)) {
         let query = {};
@@ -251,6 +260,9 @@ const searchUsers = async (requester, searchParams) => {
                 query = Object.assign({}, query, x);
             }
         });
+
+        if (requester.role === 'manager')
+            query.managerId = requester.id;
 
         let users = await models.User.findAll({
             limit: config.pageLimit,
@@ -269,27 +281,27 @@ const searchUsers = async (requester, searchParams) => {
 };
 
 const authenticatedUser = async function (email, password) {
-	let user = await models.User.findOne({
-		where: {email: validator.trim(email, '').toLowerCase()}
-	});
-	if(!user)
-		return {status:false, message: STRS.INVALID_EMAIL};
+    let user = await models.User.findOne({
+        where: {email: validator.trim(email, '').toLowerCase()}
+    });
+    if (!user)
+        return {status: false, message: STRS.INVALID_EMAIL};
 
-	let caclulatedHash = hashlib.sha256(password + user.passwordAttributes.salt || '').digest('hex');
-	if(caclulatedHash !== user.passwordAttributes.hash)
-		return {status: false, message: STRS.EMAIL_PASSWORD_NOT_MATCHED};
-	if(user.emailAttributes.verified === false)
-		return {status: false, message: STRS.EMAIL_NOT_VERIFIED};
-	if(user.status !== 'active')
-		return {status: false, message: STRS.INACTIVE_ACCOUNT};
+    let caclulatedHash = hashlib.sha256(password + user.passwordAttributes.salt || '').digest('hex');
+    if (caclulatedHash !== user.passwordAttributes.hash)
+        return {status: false, message: STRS.EMAIL_PASSWORD_NOT_MATCHED};
+    if (user.emailAttributes.verified === false)
+        return {status: false, message: STRS.EMAIL_NOT_VERIFIED};
+    if (user.status !== 'active')
+        return {status: false, message: STRS.INACTIVE_ACCOUNT};
 
-	return {
-		status: true,
-		message: STRS.LOGGED_IN_SUCCESSFUL,
-		args:{
-			user: _.pick(user.dataValues, USER_DETAILS_FIELDS)
-		}
-	};
+    return {
+        status: true,
+        message: STRS.LOGGED_IN_SUCCESSFUL,
+        args: {
+            user: _.pick(user.dataValues, USER_DETAILS_FIELDS)
+        }
+    };
 };
 
 

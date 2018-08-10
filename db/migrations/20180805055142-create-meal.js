@@ -22,7 +22,7 @@ module.exports = {
                 allowNull: false
             },
             type:{
-                type:Sequelize.ENUM('breakfast', 'lunch', 'evening_snacks', 'dinner')
+                type:Sequelize.ENUM('breakfast', 'lunch', 'snacks', 'dinner', 'others')
             },
             items: {
                 type: Sequelize.JSONB, // air conditioned

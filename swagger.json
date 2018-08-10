@@ -19,10 +19,6 @@
     {
       "name": "Meal",
       "description": "API for the meal in the system"
-    },
-    {
-      "name": "Uploads",
-      "description": "Upload images to server"
     }
   ],
   "schemes": [
@@ -74,10 +70,19 @@
                 "role": {
                   "type": "string",
                   "enum": [
-                    "realtor",
                     "consumer"
                   ],
                   "example": "consumer"
+                },
+                "calorieGoal":{
+                  "type": "integer",
+                  "example": 1000,
+                  "description": "Value of his calorie goal ( optional , default to 1 )"
+                },
+                "managerId": {
+                  "type": "integer",
+                  "example": 768,
+                  "description": "ID of his manager ( optional , default to no manager assigned )"
                 }
               }
             }
@@ -177,6 +182,11 @@
             "name": "sex",
             "in": "query",
             "description": "single sex or list of sex separated by comma an no space"
+          },
+          {
+            "managerId": "sex",
+            "in": "query",
+            "description": "list of managerids seperated by comma, fetch users who are under these managers"
           }
         ],
         "produces": [
@@ -287,6 +297,38 @@
           },
           "4xx": {
             "description": "error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete":{
+        "tags":[
+          "Users"
+        ],
+        "summary": "Delete user with given ID ( only admin can )",
+        "responses": {
+          "200": {
+            "description": "User is Deleted",
+            "schema": {
+              "properties": {
+                "success": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/definitions/DetailedUser"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4xx": {
+            "description": "User is not found",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -719,7 +761,7 @@
           "type": "string",
           "enum": [
             "admin",
-            "realtor",
+            "manager",
             "consumer"
           ]
         },

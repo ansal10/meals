@@ -24,8 +24,8 @@ describe('Meal model', () => {
     });
 
     it('should create meal with string form of rent', async()=>{
-        let h = await mealFactory({rent:'1212'});
-        assert(h.rent === 1212);
+        let h = await mealFactory({calories:'1212'});
+        assert(h.calories === 1212);
 
     });
 

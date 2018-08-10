@@ -36,31 +36,7 @@ const listAllMeal = async (user, params, page) => {
 		]
 	});
 
-	let dates = _.uniq(_.map(meals, (m) => m.date));
-	let dailyData = await models.Meal.findAll({
-		where: {
-			date:{
-				[Op.in]: dates
-			}
-		},
-		attributes:[
-			'date',
-            [models.sequelize.fn('max', models.sequelize.col('calories')), 'dayCalories']
-		],
-		group: 'date'
-	});
-	let dailyDataObj = {};
-	dailyData.forEach((d)=>{
-		dailyDataObj[d.dataValues.date] = d.dataValues.dayCalories;
-	});
-
-
-	for (let i = 0; i < meals.length; i++) {
-		meals[i] = meals[i].dataValues;
-		meals[i].edit = true;
-		meals[i].dailyCalorieIntake = dailyDataObj[meals[i].date];
-		meals[i].dailyyCalorieGoal = user.calorieGoal;
-	}
+	meals = applyCaloriesData(user, meals);
 	return meals;
 };
 
@@ -90,6 +66,18 @@ const updateMeal = async (user, mealParams, mealId) => {
 		try {
 			mealParams = _.pick(mealParams, UPDATE_MEAL_DETAILS_ATTRIBUTES);
 			Object.assign(meal, meal, mealParams);
+
+            let checkDuplicate = await models.Meal.count({
+                where: {
+                    UserId: user.id,
+                    date: mealParams.date,
+                    type: mealParams.type
+                }
+            });
+
+            if (checkDuplicate > 0 && ['breakfast', 'lunch', 'dinner'].includes(mealParams.type.lowerCase()))
+            	throw {errors: [{message: 'A meal type of ' + mealParams.type + ' already exist for date ' + mealParams.date}]};
+
 			await meal.validate();
 			await meal.save();
 			return {
@@ -128,9 +116,11 @@ const createMealInDatabase = async (user, mealParams) => {
 					type: mealParams.type
 				}
 			});
-			if (checkDuplicate > 0)
-				throw {errors: [{message: 'A meal type of ' + mealParams.type + ' already exist for date ' + mealParams.date}]}
-			let meal = await models.Meal.create(mealParams);
+			if (checkDuplicate > 0 && ['breakfast', 'lunch', 'dinner'].includes(mealParams.type.lowerCase()))
+				throw {errors: [{message: 'A meal type of ' + mealParams.type + ' already exist for date ' + mealParams.date}]};
+			let meal = new models.Meal(mealParams);
+			meal.validate();
+			await meal.save();
 			return {
 				status: true,
 				message: config.MESSAGES.RESOURCE_CREATED_SUCCESSFULLY,
@@ -141,7 +131,7 @@ const createMealInDatabase = async (user, mealParams) => {
 		} catch (e) {
 			return {
 				status: false,
-				message: e.errors[0].message,
+				message: e.message || e.errors[0].message,
 				args: {}
 			}
 		}
@@ -258,7 +248,35 @@ const filterApplicableUserIds = async (user, userids) => {
 			return userids;
 		else return [];
 	}
+};
 
+const applyCaloriesData = async (user, meals) =>{
+    let dates = _.uniq(_.map(meals, (m) => m.date));
+    let dailyData = await models.Meal.findAll({
+        where: {
+            date:{
+                [Op.in]: dates
+            }
+        },
+        attributes:[
+            'date',
+            [models.sequelize.fn('max', models.sequelize.col('calories')), 'dayCalories']
+        ],
+        group: 'date'
+    });
+    let dailyDataObj = {};
+    dailyData.forEach((d)=>{
+        dailyDataObj[d.dataValues.date] = d.dataValues.dayCalories;
+    });
+
+
+    for (let i = 0; i < meals.length; i++) {
+        meals[i] = meals[i].dataValues;
+        meals[i].edit = true;
+        meals[i].dailyCalorieIntake = dailyDataObj[meals[i].date];
+        meals[i].dailyyCalorieGoal = user.calorieGoal;
+    }
+    return meals;
 };
 
 module.exports.listAllMeal = listAllMeal;

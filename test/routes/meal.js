@@ -86,23 +86,22 @@ describe('Meals', async () => {
 
         });
 
-        it('should report error for no images', async () => {
-            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {images:[]}));
+        it('should report error for no calorie value', async () => {
+            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {calories:null}));
             res.should.have.status(400);
-            expect(res.body.error.message.includes('Images'));
+            expect(res.body.error.message.includes('calories'));
         });
 
-        it('should report error on invaid features', async () => {
-            let params = Object.assign({}, defaultMealParams, {features: ['  ']});
+        it('should report error on invalid items', async () => {
+            let params = Object.assign({}, defaultMealParams, {items: ['  ']});
             let res = await authenticatedUser.post('/api/v1/meal').send(params);
             res.should.have.status(400);
             expect(res.body.error.message.includes('Amenity'));
         });
 
         it('should report invalid type of data', async () => {
-            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {images:{}}));
+            let res = await authenticatedUser.post('/api/v1/meal').send(Object.assign({}, defaultMealParams, {type:"hug"}));
             res.should.have.status(400);
-            expect(res.body.error.message.includes('Invalid value in Images'));
         });
     });
 
