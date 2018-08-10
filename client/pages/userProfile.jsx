@@ -98,6 +98,14 @@ class UserProfile extends Component {
 
                                     <div className="form_wrap">
 
+                                        <div className="form_row">
+                                            <Field
+                                                name="id"
+                                                readOnly="true"
+                                                component={renderTextField}
+                                                label="ID:"
+                                            />
+                                        </div>
 
                                         <div className="form_row">
                                             <Field
@@ -124,13 +132,25 @@ class UserProfile extends Component {
                                                 data={[ 'male', 'female' ]}/>
                                         </div>
 
+
                                         <div className="form_row">
                                             <Field
-                                                name="role"
-                                                component={renderDropdownList}
-                                                label="User Type:"
-                                                data={[ 'admin', 'manager', 'consumer' ]}/>
+                                                name="managerId"
+                                                type="number"
+                                                component={renderTextField}
+                                                label="Manager ID:"
+                                            />
                                         </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="calorieGoal"
+                                                component={renderTextField}
+                                                type="number"
+                                                label="Calorie goal:"
+                                            />
+                                        </div>
+
 
                                         {
                                             Gen.isUserAdmin() ?  <div className="form_row">

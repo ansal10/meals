@@ -124,20 +124,43 @@ class OtherUserProfile extends Component {
                                                 data={[ 'male', 'female' ]}/>
                                         </div>
 
-                                        <div className="form_row">
-                                            <Field
-                                                name="role"
-                                                component={renderDropdownList}
-                                                label="User Type:"
-                                                data={[ 'admin', 'manager', 'consumer' ]}/>
-                                        </div>
+                                        {
+                                            Gen.isUserAdmin() ?
+                                                <div className="form_row">
+                                                    <Field
+                                                        name="role"
+                                                        component={renderDropdownList}
+                                                        label="User Type:"
+                                                        data={[ 'admin', 'manager', 'consumer' ]}/>
+                                                </div> : ''
+                                        }
 
-                                      <div className="form_row">
+                                        <div className="form_row">
                                             <Field
                                                 name="status"
                                                 component={renderDropdownList}
                                                 label="Status:"
                                                 data={[ 'active', 'inactive' ]}/>
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="managerId"
+                                                type="number"
+                                                component={renderTextField}
+                                                label="Manager ID:"
+                                                placehoder="Optional"
+                                            />
+                                        </div>
+
+                                        <div className="form_row">
+                                            <Field
+                                                name="calorieGoal"
+                                                component={renderTextField}
+                                                type="number"
+                                                label="Calorie goal:"
+                                                placehoder="Optional"
+                                            />
                                         </div>
 
                                         <div className="form_buttons">

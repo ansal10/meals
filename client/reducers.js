@@ -29,10 +29,10 @@ const otherUserReducer = function(state = null, action){
 }
 
 
-const propertyReducer = function(state = null, action){
+const mealReducer = function(state = null, action){
 
     switch(action.type){
-        case 'FETCH_PROPERTY':
+        case 'FETCH_MEAL':
             return action.payload || false;
         case 'CLEAR_PROPERTY_DATA':
             return null;
@@ -41,11 +41,11 @@ const propertyReducer = function(state = null, action){
     }
 }
 
-const propertiesReducer = function(state = {
-    properties: null
+const mealsReducer = function(state = {
+    meals: null
 }, action){
     switch(action.type){
-        case 'FETCH_PROPERTIES':
+        case 'FETCH_MEALS':
             const merge = action.merge;
             let newProperties = action.payload.success.data;
             if(merge) {
@@ -66,7 +66,7 @@ const propertiesReducer = function(state = {
 };
 
 const usersReducer = function(state = {
-    properties: null
+    meals: null
 }, action){
     switch(action.type){
         case 'FETCH_USERS':
@@ -91,8 +91,8 @@ const usersReducer = function(state = {
 
 export default combineReducers({
     form: formReducer,
-    property: propertyReducer,
-    properties: propertiesReducer,
+    meal: mealReducer,
+    meals: mealsReducer,
     user: userReducer,
     otherUser: otherUserReducer,
     users: usersReducer,

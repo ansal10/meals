@@ -13,7 +13,7 @@
 @import './components/footer';
 @import './components/infoBlock';
 @import './components/titleInfo';
-@import './components/propertyCard';
+@import 'components/mealCard';
 @import './components/filter';
 
 // Pages
@@ -21,8 +21,8 @@
 @import './pages/posts';
 @import './pages/servicesPage';
 @import './pages/aboutPage';
-@import './pages/propertyPage';
-@import './pages/addPropertyPage';
-@import './pages/propertiesPage';
+@import 'pages/mealPage';
+@import 'pages/addMealPage';
+@import 'pages/mealsPage';
 @import './pages/registerPage';
 @import './pages/userProfilePage';
