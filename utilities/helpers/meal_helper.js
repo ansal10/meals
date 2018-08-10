@@ -186,6 +186,13 @@ const searchMeal = async (user, searchParams, page) => {
 				}
 			});
 		}
+		if (isValidArray(searchParams.ids)){
+			query = Object.assign({}, query, {
+				id:{
+					[Op.in]: searchParams.ids
+				}
+			})
+		}
 		let userIds = filterApplicableUserIds(user, searchParams.UserId);
 		if (isValidArray(userIds)) {
 			query = Object.assign({}, query, {  // only acceptable ids
