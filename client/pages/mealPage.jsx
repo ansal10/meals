@@ -8,7 +8,6 @@ import {fetchMealAction, clearMealData} from "../actions";
 import InternalTextBanner from '../components/banners/internalTextBanner';
 import {Grid, Row, Col, Image, Button} from 'react-bootstrap';
 import ImageSlider from "../components/imageSlider";
-import MapContainer from "../components/map";
 import axiosInstance from '../client';
 
 import TitleInfo from "../components/titleInfo";

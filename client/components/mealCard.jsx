@@ -16,31 +16,30 @@ class MealCard extends Component {
     }
 
     render(){
-        const {id, images, title, city, country, locality, edit, rent, builtArea, type, availableFrom} = this.props.meal;
-        const availableFromMessage = Gen.getAvailableString(availableFrom);
+        const {id, title, description, calories, type, items, time, day, date, status, createdAt, updatedAt} = this.props.meal;
         return(
             <Row className="meal-card-container" onClick={this.mealClicked.bind(this)}>
-                <Col className="meal-image-container" xs={4} md={3}>
-                    <img className="meal-image" src={images[0]} />
-                </Col>
+                {/*<Col className="meal-image-container" xs={4} md={3}>*/}
+                    {/*<img className="meal-image" src={images[0]} />*/}
+                {/*</Col>*/}
 
                 <Col className="meal-info-container" xs={8} md={9}>
                     <div className="meal-title" >
                         {title}
                     </div>
                     <div className="meal-location">
-                        {`${locality}, ${city}, ${country} `}
+                        {`${date} ${time} `}
                     </div>
                     <Row>
                         <Col xs={6} className="meal-area">
-                            {`${Gen.round(builtArea)} sq ft`}
+                            {day}
                         </Col>
                         <Col xs={6} className="meal-rate">
-                            {`$ ${Gen.round(rent)}`}
+                            {type}
                         </Col>
                     </Row>
                     <div className="meal-furnishing-status">
-                        {`${type}, ${availableFromMessage}`}
+                        {`${calories}, ${status}`}
                     </div>
                 </Col>
             </Row>

@@ -6,9 +6,8 @@ import InternalTextBanner from '../components/banners/internalTextBanner';
 import {clearNextUrl, fetchMealsAction} from '../actions';
 import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
-import PropertyCard from "../components/mealCard";
+import MealCard from "../components/mealCard";
 import Filter from "../components/filter";
-import MultipleMapContainer from "../components/mapMultiple";
 
 class Meals extends Component {
 
@@ -20,7 +19,6 @@ class Meals extends Component {
             filters: {}
         };
     }
-
 
     componentDidMount(){
         this.props.clearNextUrl();
@@ -37,7 +35,7 @@ class Meals extends Component {
             const mealsData = this.props.meals.map((meal, index) => {
                 return (
                     <div key={index} className="meal">
-                        <PropertyCard meal={meal}/>
+                        <MealCard meal={meal}/>
                     </div>
                 );
             });
@@ -49,26 +47,6 @@ class Meals extends Component {
                     </div>
                 </div>
             );
-        }
-    }
-
-    shouldShowMap() {
-        return this.props.location.pathname.includes("/meals/map");
-    }
-
-    renderMealsOnMap() {
-        if (this.props.meals) {
-            const coordinates = this.props.meals.map((meal, i) => {
-                const {latitude, longitude, id} = meal;
-                return {latitude, longitude, id};
-                // return {latitude: 40.741895, longitude: -73.989308};
-            });
-
-
-            return (
-                <MultipleMapContainer title="Property search" coordinates={coordinates}/>
-            )
-
         }
     }
 
@@ -86,7 +64,6 @@ class Meals extends Component {
         })
     }
 
-
     head(){
         return (
             <Helmet bodyAttributes={{class: "postsPage"}}>
@@ -95,7 +72,7 @@ class Meals extends Component {
         );
     }
 
-    fetchPropertyAndHideFilterOnMobile(data) {
+    fetchMealAndHideFilterOnMobile(data) {
         this.props.clearNextUrl();
         this.props.fetchMealsAction(data);
         this.setState({
@@ -104,13 +81,8 @@ class Meals extends Component {
         })
     }
 
-    displayNavLink(isMap) {
-        return isMap ? <Link className="right-align" to="/meals">See meals list</Link> : <Link className="right-align" to="/meals/map">See meals on map</Link>
-    }
 
     render() {
-
-        const isMap = this.shouldShowMap();
 
         const {meals} = this.props;
         if(this.props.meals){
@@ -121,25 +93,20 @@ class Meals extends Component {
                     <div className="main anim-appear">
                         <Grid className="meals">
 
-                            <Row>
-                                {this.displayNavLink(isMap)}
-                            </Row>
-
                             <div className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'} show-filter-button`} onClick={this.showFilter.bind(this)}>
                                 filter
                             </div>
 
                             <Row>
                                 <Col className={`${!this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={4}>
-                                    <Filter user={this.props.user} applyFilter={this.fetchPropertyAndHideFilterOnMobile.bind(this)}/>
+                                    <Filter user={this.props.user} applyFilter={this.fetchMealAndHideFilterOnMobile.bind(this)}/>
                                 </Col>
                                 <Col className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={8}>
                                     {
-                                        (meals.length > 0) ? (
-                                            isMap ? this.renderMealsOnMap() : this.renderMeals())
+                                        (meals.length > 0) ? this.renderMeals()
                                          :
                                            <div className="no-result">
-                                            <h2> Oops!!! No Results</h2>
+                                            <h2> Oops!!! No meals</h2>
                                             <h2> Try to widen your search</h2>
                                            </div>
                                     }

@@ -17,7 +17,6 @@ import UploadImage from "../components/uploadImage";
 import {Gen} from "../helpers/gen";
 import {clearMealData, fetchMealAction} from "../actions";
 import {connect} from "react-redux";
-import LocationSearchInput from "../components/locationSearchInput";
 
 class AddMealPage extends Component {
 
