@@ -8,7 +8,7 @@ const router = express.Router();
 const _ = require('underscore');
 const jwt = require('jsonwebtoken');
 
-const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'createdAt', 'updatedAt'];
+const USER_DETAILS_FIELDS = ['role', 'status', 'sex', 'name', 'email', 'id', 'managerId', 'calorieGoal', 'createdAt', 'updatedAt'];
 
 
 /***
