@@ -25,6 +25,7 @@ class Meal extends Component {
         console.log(this.props);
         this.props.fetchMealAction(this.props.match.params.id);
     }
+
     componentWillUnmount(){
         this.props.clearMealData();
     }
@@ -34,7 +35,7 @@ class Meal extends Component {
             .then((success) => {
                 console.log(success.data.success.message);
                 notify.show(success.data.success.message, 'success');
-                this.props.history.push(`/properties`);
+                this.props.history.push(`/meals`);
             })
             .catch((error) => {
                 console.log(error.response.data.error.message);
@@ -47,7 +48,7 @@ class Meal extends Component {
         const {mealData} = this.props;
 
         if(this.props.mealData){
-            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, carpetArea, type, availableFrom, features, furnishingStatus, description, powerBackup, floor, createdAt, updatedAt, maintenance} = this.props.mealData;
+            const {id, title, description, calories, type, items, time, day, date, status, createdAt, updatedAt} = this.props.mealData;
 
             return(
                 <div className="meal-page">
@@ -62,7 +63,7 @@ class Meal extends Component {
                                 <div className="post">
                                     <Grid>
                                         <Row className="title-row">
-                                            <TitleInfo name={title} location={locality} price={`$ ${Gen.round(rent)}`} area={`${Gen.round(builtArea)} sq ft`}/>
+                                            <TitleInfo name={title} date={date} time={time} day={day}/>
                                             {
                                                 mealData.edit ? <div><Link className="right-align" to={`/meal/edit/${id}`}>Edit this meal</Link>
                                                     <div className="delete-meal" onClick={this.deleteMeal.bind(this)}>
@@ -70,93 +71,37 @@ class Meal extends Component {
                                                     </div>
                                                 </div>
                                                     : ''
-
                                             }
                                         </Row>
                                         <Row className="bottom-line-separator">
+                                            {/*<Col xs={12} md={6}>*/}
+                                                {/*<div className="post_banner">*/}
+                                                    {/*<ImageSlider images={images} />*/}
+                                                {/*</div>*/}
+                                            {/*</Col>*/}
                                             <Col xs={12} md={6}>
-                                                <div className="post_banner">
-                                                    <ImageSlider images={images} />
-                                                </div>
-                                            </Col>
-                                            <Col xs={12} md={6}>
                                                 <Row>
                                                     <Col xs={6}>
-                                                        <InfoBlock heading="configuration" info={type}/>
+                                                        <InfoBlock heading="Type" info={type}/>
                                                     </Col>
                                                     <Col xs={6}>
-                                                        <InfoBlock heading="rent" info={`$ ${Gen.round(rent)}`}/>
+                                                        <InfoBlock heading="time" info={time}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="built area" info={`${Gen.round(builtArea)} sq ft`}/>
+                                                        <InfoBlock heading="Calories" info={calories} />
                                                     </Col>
                                                     <Col xs={6}>
-                                                        <InfoBlock heading="carpet area" info={`${Gen.round(carpetArea)} sq ft`}/>
+                                                        <InfoBlock heading="status" info={status}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="furnishing" info={furnishingStatus}/>
+                                                        <InfoBlock heading="date" info={date}/>
                                                     </Col>
                                                     <Col xs={6} >
-                                                        <InfoBlock heading="Power backup" info={powerBackup}/>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="available from" info={Gen.getAvailableString(availableFrom)}/>
-                                                    </Col>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="Floor" info={floor}/>
-                                                    </Col>
-                                                </Row>
-
-                                                <Row>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="availability" info={availability}/>
-                                                    </Col>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="City" info={city}/>
-                                                    </Col>
-                                                </Row>
-
-
-                                                <Row>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="created at" info={Gen.getFormattedDate(createdAt)}/>
-                                                    </Col>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="updated at" info={Gen.getFormattedDate(updatedAt)}/>
-                                                    </Col>
-                                                </Row>
-
-                                                <Row>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="maintenance monthly" info={maintenance.monthly ? `$ ${Gen.round(maintenance.monthly)}` : '-'}/>
-
-                                                    </Col>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="maintenance deposit" info={maintenance.deposit ? `$ ${Gen.round(maintenance.deposit)}` : '-'}/>
-                                                    </Col>
-                                                </Row>
-
-
-                                                <Row>
-                                                    <Col xs={6} >
-                                                         <InfoBlock heading="maintenance brokerage" info={maintenance.brokerage ? `$ ${Gen.round(maintenance.brokerage)}` : '-'}/>
-                                                    </Col>
-                                                    <Col xs={6} >
-                                                        <InfoBlock heading="maintenance annually" info={maintenance.annually ? `$ ${Gen.round(maintenance.annually)}` : '-'}/>
-                                                    </Col>
-                                                </Row>
-
-
-
-                                                <Row>
-                                                    <Col xs={12}>
-                                                        <InfoBlock heading="address" info={address}/>
+                                                        <InfoBlock heading="day" info={day}/>
                                                     </Col>
                                                 </Row>
 
@@ -172,18 +117,14 @@ class Meal extends Component {
 
 
                                         <h1 className="small-header">
-                                            Features
+                                            Items
                                         </h1>
                                         <Row className="feature-wrapper bottom-line-separator">
                                             {
-                                                features.map((feature, i) =>
+                                                items.map((feature, i) =>
                                                     <Feature name={feature} key={i} />
                                                 )
                                             }
-                                        </Row>
-
-                                        <Row>
-                                            <MapContainer title={title} lat={latitude} lng={longitude} />
                                         </Row>
 
                                     </Grid>
@@ -214,7 +155,6 @@ class Meal extends Component {
                 </div>
             );
         }
-
     }
   }
 

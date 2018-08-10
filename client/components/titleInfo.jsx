@@ -11,20 +11,20 @@ class TitleInfo extends Component {
 
     render(){
 
-        const {name, location, price, area} = this.props;
+        const {name, date, time, day} = this.props;
         return(
             <Col xs={12} className="title-container" >
                 <div className="title dark-text">
                     {name}
                 </div>
                 <div className="location light-text">
-                    {location}
+                    {date}
                 </div>
                 <div className="price dark-text float-left margin-right-10">
-                    {price}
+                    {time}
                 </div>
                 <div className="area light-text">
-                    {area}
+                    {day}
                 </div>
             </Col>
         )
@@ -33,9 +33,9 @@ class TitleInfo extends Component {
 
 TitleInfo.propTypes = {
     name: PropTypes.string.isRequired,
-    location: PropTypes.string.isRequired,
-    price: PropTypes.string.isRequired,
-    area: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
+    day: PropTypes.string.isRequired,
 }
 
 export default TitleInfo;

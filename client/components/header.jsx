@@ -84,7 +84,7 @@ class Header extends Component {
 
                                 <li>
                                     <NavLink activeClassName="active" to="/meal/add">Add Meal</NavLink>
-                                </li> : ''
+                                </li>
 
                                 {
                                     user ? <li className="last">
