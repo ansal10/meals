@@ -1,4 +1,4 @@
-.property-card-container {
+.meal-card-container {
 
   &:hover {
     cursor: pointer;
@@ -8,30 +8,30 @@
   padding: 5px 10px;
   background: $white;
 
-  .property-image-container {
-    .property-image {
+  .meal-image-container {
+    .meal-image {
       width: 100%;
     }
   }
 
-  .property-info-container {
-    .property-title {
+  .meal-info-container {
+    .meal-title {
       font-weight: 600;
       font-size: 1.4rem;
     }
-    .property-location {
+    .meal-location {
       font-size: 1.2rem;
       color: #777;
     }
-    .property-area {
+    .meal-area {
       font-size: 1.2rem;
       color: #777;
     }
-    .property-rate {
+    .meal-rate {
       font-size: 1.2rem;
       color: #777;
     }
-    .property-furnishing-status {
+    .meal-furnishing-status {
       font-weight: 600;
       font-size: 1.4rem;
     }
@@ -39,31 +39,31 @@
 }
 
 @media all and (min-width: 960px) {
-  .property-card-container {
+  .meal-card-container {
 
-    .property-image-container {
-      .property-image {
+    .meal-image-container {
+      .meal-image {
       }
     }
 
-    .property-info-container {
-      .property-title {
+    .meal-info-container {
+      .meal-title {
         font-size: 2rem;
         margin-top: 10px;
       }
-      .property-location {
+      .meal-location {
         font-size: 1.8rem;
         margin-top: 10px;
       }
-      .property-area {
+      .meal-area {
         font-size: 1.8rem;
         margin-top: 10px;
       }
-      .property-rate {
+      .meal-rate {
         font-size: 1.8rem;
         margin-top: 10px;
       }
-      .property-furnishing-status {
+      .meal-furnishing-status {
         font-size: 1.8rem;
         margin-top: 10px;
       }

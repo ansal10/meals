@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import {Link, NavLink} from 'react-router-dom';
 import {notify} from 'react-notify-toast';
 import { Field, reduxForm } from 'redux-form';
-import { validate_addProperty as validate }  from './../common/forms/validation';
+import { validate_addMeal as validate }  from './../common/forms/validation';
 import { renderTextField, renderMultiselect, renderTextarea } from './../common/forms/input-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from './../components/banners/internalTextBanner';
@@ -15,11 +15,11 @@ import {CREATE_MEAL_ENDPOINT, UPDATE_MEAL_ENDPOINT} from "../endpoints";
 import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
 import UploadImage from "../components/uploadImage";
 import {Gen} from "../helpers/gen";
-import {clearPropertyData, fetchPropertyAction} from "../actions";
+import {clearMealData, fetchMealAction} from "../actions";
 import {connect} from "react-redux";
 import LocationSearchInput from "../components/locationSearchInput";
 
-class AddPropertyPage extends Component {
+class AddMealPage extends Component {
 
     constructor(props) {
         super(props);
@@ -42,9 +42,9 @@ class AddPropertyPage extends Component {
     componentWillMount() {
         const id = this.props.match.params.id || null;
         if(id) {
-            this.props.fetchPropertyAction(id);
+            this.props.fetchMealAction(id);
         } else {
-            this.props.clearPropertyData();
+            this.props.clearMealData();
         }
     }
 
@@ -78,7 +78,7 @@ class AddPropertyPage extends Component {
     submit(data){
         this.toggle();
         console.log(data);
-        
+
         const images = data.images ? Gen.mergeArray(data.images, this.state.images) : this.state.images;
 
       let {title, country, city, locality, rent, builtArea, carpetArea, latitude, longitude, type, availability, availableFrom, description, availableFor, floor, address, powerBackup, maintenance, features, furnishingStatus} = data;
@@ -134,22 +134,22 @@ class AddPropertyPage extends Component {
   head(){
     return (
         <Helmet bodyAttributes={{class: "contactPage"}}>
-          <title>{`Add/Edit Property`}</title>
+          <title>{`Add/Edit Meal`}</title>
         </Helmet>
     );
   }
 
     render() {
 
-      const { handleSubmit, propertyData } = this.props;
+      const { handleSubmit, mealData } = this.props;
       const pageType = this.getPageType();
 
-      if((pageType === 'Edit' && !propertyData) || (pageType === 'Create' && propertyData)) {
+      if((pageType === 'Edit' && !mealData) || (pageType === 'Create' && mealData)) {
           return null;
       }
 
       return (
-          
+
           <section className="contactPage_wrap">
           {this.head()}
             <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
@@ -164,7 +164,7 @@ class AddPropertyPage extends Component {
                                     </div>
                                     <Link className="proceed-to-link" to="/">Proceed to properties page</Link>
 
-                                </div>: <form className="add-property-container" onSubmit={handleSubmit(this.submit.bind(this))}>
+                                </div>: <form className="add-meal-container" onSubmit={handleSubmit(this.submit.bind(this))}>
 
                                     <div className="form_wrap">
 
@@ -176,7 +176,7 @@ class AddPropertyPage extends Component {
                                             />
                                         </div>
 
-                                        <UploadImage images={propertyData ? propertyData.images : []} addImage={this.addImage.bind(this)} removeImage={this.removeImage.bind(this)}/>
+                                        <UploadImage images={mealData ? mealData.images : []} addImage={this.addImage.bind(this)} removeImage={this.removeImage.bind(this)}/>
                                         <div className="form_row">
                                             <Field
                                                 name="country"
@@ -389,7 +389,7 @@ class AddPropertyPage extends Component {
                                                 data-spinner-color="#ddd"
                                                 data-spinner-lines={12}
                                             >
-                                                {pageType} property
+                                                {pageType} meal
                                             </LaddaButton>
                                         </div>
 
@@ -403,9 +403,9 @@ class AddPropertyPage extends Component {
                   </div>
               </div>
               </ReactCSSTransitionGroup>
-          
+
           </section>
-        
+
       );
     }
   }
@@ -413,17 +413,17 @@ class AddPropertyPage extends Component {
 
 function mapStateToProps(state){
     return {
-        propertyData: state.property,
-        initialValues: state.property
+        mealData: state.meal,
+        initialValues: state.meal
     };
 };
 
-AddPropertyPage = reduxForm({
-      form: 'propertyForm',
+AddMealPage = reduxForm({
+      form: 'mealForm',
       validate,
       enableReinitialize: true,
-})(AddPropertyPage);
+})(AddMealPage);
 
 export default {
-    component: connect(mapStateToProps, { fetchPropertyAction, clearPropertyData })(AddPropertyPage)
+    component: connect(mapStateToProps, { fetchMealAction, clearMealData })(AddMealPage)
 };

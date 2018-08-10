@@ -49,12 +49,12 @@ export const clearUserDetails = () => async (dispatch, getState, api) => {
 };
 
 
-export const fetchPropertyAction = (productID) => async (dispatch, getState, api) => {
+export const fetchMealAction = (productID) => async (dispatch, getState, api) => {
 
     await api.get(GET_MEAL_ENDPOINT+'/'+productID).then(response => {
         console.log(response)
         dispatch({
-            type: 'FETCH_PROPERTY',
+            type: 'FETCH_MEAL',
             payload: response.data.success.data
         })
     }).catch((err) => {
@@ -84,10 +84,10 @@ export const fetchUsersAction = (data) => async (dispatch, getState, api) => {
 
 };
 
-export const fetchPropertiesAction = (data) => async (dispatch, getState, api) => {
+export const fetchMealsAction = (data) => async (dispatch, getState, api) => {
 
     const state = getState();
-    const nextUrl = state.properties.nextUrl || null;
+    const nextUrl = state.meals.nextUrl || null;
 
     const endpoint = nextUrl ? nextUrl : GET_MEALS_ENDPOINT;
 
@@ -95,7 +95,7 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
 
     await api.post(endpoint, data).then(response => {
         dispatch({
-            type: 'FETCH_PROPERTIES',
+            type: 'FETCH_MEALS',
             payload: response.data,
             merge: merge
         })
@@ -105,7 +105,7 @@ export const fetchPropertiesAction = (data) => async (dispatch, getState, api) =
 
 };
 
-export const clearPropertyData = () => (dispatch) => {
+export const clearMealData = () => (dispatch) => {
     dispatch({
         type: 'CLEAR_PROPERTY_DATA'
     })

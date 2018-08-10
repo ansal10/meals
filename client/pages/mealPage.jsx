@@ -4,7 +4,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { Helmet } from 'react-helmet';
 import InfoBlock from '../components/infoBlock';
 import Feature from '../components/feature';
-import {fetchPropertyAction, clearPropertyData} from "../actions";
+import {fetchMealAction, clearMealData} from "../actions";
 import InternalTextBanner from '../components/banners/internalTextBanner';
 import {Grid, Row, Col, Image, Button} from 'react-bootstrap';
 import ImageSlider from "../components/imageSlider";
@@ -19,17 +19,17 @@ import {notify} from "react-notify-toast";
 import { withRouter } from 'react-router-dom'
 
 
-class Property extends Component {
+class Meal extends Component {
 
     componentDidMount(){
         console.log(this.props);
-        this.props.fetchPropertyAction(this.props.match.params.id);
+        this.props.fetchMealAction(this.props.match.params.id);
     }
     componentWillUnmount(){
-        this.props.clearPropertyData();
+        this.props.clearMealData();
     }
 
-    deleteProperty() {
+    deleteMeal() {
         axiosInstance.delete(DELETE_MEAL_ENDPOINT + "/" + this.props.match.params.id)
             .then((success) => {
                 console.log(success.data.success.message);
@@ -44,17 +44,17 @@ class Property extends Component {
 
     render() {
 
-        const {propertyData} = this.props;
+        const {mealData} = this.props;
 
-        if(this.props.propertyData){
-            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, carpetArea, type, availableFrom, features, furnishingStatus, description, powerBackup, floor, createdAt, updatedAt, maintenance} = this.props.propertyData;
+        if(this.props.mealData){
+            const {id, images, title, city, country, locality, edit, latitude, longitude, availability, address, rent, builtArea, carpetArea, type, availableFrom, features, furnishingStatus, description, powerBackup, floor, createdAt, updatedAt, maintenance} = this.props.mealData;
 
             return(
-                <div className="property-page">
+                <div className="meal-page">
                     <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{`${this.props.propertyData.title}`}</title>
+                        <title>{`${this.props.mealData.title}`}</title>
                     </Helmet>
-                    {/*<InternalTextBanner Heading={this.props.propertyData.title} wrapperClass="post" />*/}
+                    {/*<InternalTextBanner Heading={this.props.mealData.title} wrapperClass="post" />*/}
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
                         <div className="grid">
@@ -64,8 +64,8 @@ class Property extends Component {
                                         <Row className="title-row">
                                             <TitleInfo name={title} location={locality} price={`$ ${Gen.round(rent)}`} area={`${Gen.round(builtArea)} sq ft`}/>
                                             {
-                                                propertyData.edit ? <div><Link className="right-align" to={`/property/edit/${id}`}>Edit this property</Link>
-                                                    <div className="delete-property" onClick={this.deleteProperty.bind(this)}>
+                                                mealData.edit ? <div><Link className="right-align" to={`/meal/edit/${id}`}>Edit this meal</Link>
+                                                    <div className="delete-meal" onClick={this.deleteMeal.bind(this)}>
                                                         Delete
                                                     </div>
                                                 </div>
@@ -166,7 +166,7 @@ class Property extends Component {
 
                                         <Row className="bottom-line-separator">
                                             <Col xs={12}>
-                                                <InfoBlock heading="About Property" info={description} />
+                                                <InfoBlock heading="About Meal" info={description} />
                                             </Col>
                                         </Row>
 
@@ -196,9 +196,9 @@ class Property extends Component {
             );
         } else {
             return (
-                <div className="property-page">
+                <div className="meal-page">
                     <Helmet bodyAttributes={{class: "postPage"}}>
-                        <title>{'Property Page'}</title>
+                        <title>{'Meal Page'}</title>
                     </Helmet>
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
@@ -220,16 +220,16 @@ class Property extends Component {
 
 function mapStateToProps(state){
     return {
-        propertyData: state.property,
+        mealData: state.meal,
     };
 };
 
 function loadData(store, landingPageID){
-    return store.dispatch(fetchPropertyAction(landingPageID));
+    return store.dispatch(fetchMealAction(landingPageID));
 }
 
 export default {
     loadData,
-    component: withRouter(connect(mapStateToProps, { fetchPropertyAction, clearPropertyData })(Property))
+    component: withRouter(connect(mapStateToProps, { fetchMealAction, clearMealData })(Meal))
 };
 

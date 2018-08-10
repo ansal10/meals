@@ -3,14 +3,14 @@ import { connect } from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from '../components/banners/internalTextBanner';
-import {clearNextUrl, fetchPropertiesAction} from '../actions';
+import {clearNextUrl, fetchMealsAction} from '../actions';
 import { Helmet } from 'react-helmet';
 import {Link} from 'react-router-dom';
-import PropertyCard from "../components/propertyCard";
+import PropertyCard from "../components/mealCard";
 import Filter from "../components/filter";
 import MultipleMapContainer from "../components/mapMultiple";
 
-class Properties extends Component {
+class Meals extends Component {
 
     constructor(props) {
         super(props);
@@ -24,26 +24,26 @@ class Properties extends Component {
 
     componentDidMount(){
         this.props.clearNextUrl();
-        this.props.fetchPropertiesAction();
+        this.props.fetchMealsAction();
     }
 
     loadMoreClicked() {
         console.log("load more clicked")
-        this.props.fetchPropertiesAction(this.state.filters);
+        this.props.fetchMealsAction(this.state.filters);
     }
 
-    renderProperties() {
-        if (this.props.properties != false) {
-            const propertiesData = this.props.properties.map((property, index) => {
+    renderMeals() {
+        if (this.props.meals != false) {
+            const mealsData = this.props.meals.map((meal, index) => {
                 return (
-                    <div key={index} className="property">
-                        <PropertyCard property={property}/>
+                    <div key={index} className="meal">
+                        <PropertyCard meal={meal}/>
                     </div>
                 );
             });
 
             return (<div>
-                {propertiesData}
+                {mealsData}
                     <div className={`${this.props.nextUrl ? '' : 'hidden'} load-more-container`}>
                         <div className="load-more" onClick={this.loadMoreClicked.bind(this)}> Load more</div>
                     </div>
@@ -53,13 +53,13 @@ class Properties extends Component {
     }
 
     shouldShowMap() {
-        return this.props.location.pathname.includes("/properties/map");
+        return this.props.location.pathname.includes("/meals/map");
     }
 
-    renderPropertiesOnMap() {
-        if (this.props.properties) {
-            const coordinates = this.props.properties.map((property, i) => {
-                const {latitude, longitude, id} = property;
+    renderMealsOnMap() {
+        if (this.props.meals) {
+            const coordinates = this.props.meals.map((meal, i) => {
+                const {latitude, longitude, id} = meal;
                 return {latitude, longitude, id};
                 // return {latitude: 40.741895, longitude: -73.989308};
             });
@@ -90,14 +90,14 @@ class Properties extends Component {
     head(){
         return (
             <Helmet bodyAttributes={{class: "postsPage"}}>
-                <title>{`Properties Page`}</title>
+                <title>{`Meals Page`}</title>
             </Helmet>
         );
     }
 
     fetchPropertyAndHideFilterOnMobile(data) {
         this.props.clearNextUrl();
-        this.props.fetchPropertiesAction(data);
+        this.props.fetchMealsAction(data);
         this.setState({
             showFilterOnMobile: false,
             filters: data
@@ -105,21 +105,21 @@ class Properties extends Component {
     }
 
     displayNavLink(isMap) {
-        return isMap ? <Link className="right-align" to="/properties">See properties list</Link> : <Link className="right-align" to="/properties/map">See properties on map</Link>
+        return isMap ? <Link className="right-align" to="/meals">See meals list</Link> : <Link className="right-align" to="/meals/map">See meals on map</Link>
     }
 
     render() {
 
         const isMap = this.shouldShowMap();
 
-        const {properties} = this.props;
-        if(this.props.properties){
+        const {meals} = this.props;
+        if(this.props.meals){
             return(
-                <div className="properties-page">
+                <div className="meals-page">
                     {this.head()}
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
-                        <Grid className="properties">
+                        <Grid className="meals">
 
                             <Row>
                                 {this.displayNavLink(isMap)}
@@ -135,8 +135,8 @@ class Properties extends Component {
                                 </Col>
                                 <Col className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={8}>
                                     {
-                                        (properties.length > 0) ? (
-                                            isMap ? this.renderPropertiesOnMap() : this.renderProperties())
+                                        (meals.length > 0) ? (
+                                            isMap ? this.renderMealsOnMap() : this.renderMeals())
                                          :
                                            <div className="no-result">
                                             <h2> Oops!!! No Results</h2>
@@ -176,18 +176,18 @@ class Properties extends Component {
 
 function mapStateToProps(state){
     return {
-        properties: state.properties.arr,
-        nextUrl: state.properties.nextUrl,
+        meals: state.meals.arr,
+        nextUrl: state.meals.nextUrl,
         user: state.user,
     };
 };
 
 function loadData(store){
-    return store.dispatch(fetchPropertiesAction());
+    return store.dispatch(fetchMealsAction());
 }
 
 export default {
     loadData,
-    component: connect(mapStateToProps, { fetchPropertiesAction, clearNextUrl })(Properties)
+    component: connect(mapStateToProps, { fetchMealsAction, clearNextUrl })(Meals)
 };
 

@@ -3,9 +3,9 @@ import App from './app';
 import RegisterPage from './pages/registerPage';
 import LoginPage from './pages/loginPage';
 import ResetPasswordPage from './pages/resetPasswordPage';
-import Property from './pages/propertyPage';
-import AddProperty from './pages/addPropertyPage';
-import Properties from './pages/propertiesPage';
+import Meal from './pages/mealPage';
+import AddMeal from './pages/addMealPage';
+import Meals from './pages/mealsPage';
 import Users from './pages/usersPage';
 import UserProfile from './pages/userProfile';
 import OtherUserProfile from './pages/otherUserProfile';
@@ -16,20 +16,20 @@ import NotFoundPage from './pages/notFound404Page';
 
 export default [
     {
-        path: '/property',
+        path: '/meal',
         ...App,
         routes: [
             {
-                path: '/property/add',
-                ...AddProperty
+                path: '/meal/add',
+                ...AddMeal
             },
             {
-                path: '/property/edit/:id',
-                ...AddProperty
+                path: '/meal/edit/:id',
+                ...AddMeal
             },
             {
-                path: '/property/:id',
-                ...Property
+                path: '/meal/:id',
+                ...Meal
             }
         ]
     },
@@ -38,7 +38,7 @@ export default [
         ...App,
         routes: [
             {
-                ...Properties
+                ...Meals
             }
         ]
     },
@@ -126,7 +126,7 @@ export default [
         ...App,
         routes: [
             {
-                ...Properties
+                ...Meals
             }
         ]
     },
