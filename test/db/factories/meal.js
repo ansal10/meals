@@ -16,7 +16,7 @@ const data = async (props = {}) => {
         title: faker.name.findName() + faker.name.findName(),
         description: "This is just a test desription that will check what is valid description here around",
         calories: faker.random.number()%10000,
-        type: _.sample(['breakfast', 'lunch', 'dinner', 'evening_snacks']),
+        type: _.sample(['breakfast', 'lunch', 'dinner', 'snacks']),
         items: ['Eggs', 'Chicken'],
         time: d.format('HH:mm'),
         day: d.format('dddd'),

@@ -23,7 +23,7 @@ describe('Meal model', () => {
         await expect(12).to.equal(12)
     });
 
-    it('should create meal with string form of rent', async()=>{
+    it('should create meal with string form of calories', async()=>{
         let h = await mealFactory({calories:'1212'});
         assert(h.calories === 1212);
 
