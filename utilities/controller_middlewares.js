@@ -8,12 +8,16 @@ const isAuthenticated = async ( req, res, next ) => {
     let token = req.cookies.access_token || req.headers.access_token;
 
     if ( token ) {
-        let data = jwt.verify(token, config.JWT_SECRET);
-        let user = await models.User.findOne({where: {id: data.user_id}});
-        if (user && user.status === 'active'){
-            req.session.user = user;
-            return next();
-        }else{
+        try {
+            let data = jwt.verify(token, config.JWT_SECRET);
+            let user = await models.User.findOne({where: {id: data.user_id}});
+            if (user && user.status === 'active') {
+                req.session.user = user;
+                return next();
+            } else {
+                genUtil.sendJsonResponse(res, 401, "Unauthorized access");
+            }
+        } catch (e) {
             genUtil.sendJsonResponse(res, 401, "Unauthorized access");
         }
     }else {

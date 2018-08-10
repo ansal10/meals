@@ -54,6 +54,8 @@ router.post('/login', async (req, res, next) => {
 // logout
 router.post('/logout', middlewares.isAuthenticated, (req, res, next) => {
     req.session.destroy();
+    res.cookie('access_token', null);
+    res.setHeader('access_token', null);
     genUtil.sendJsonResponse(res, 200, 'Logout successfull', null);
 });
 
