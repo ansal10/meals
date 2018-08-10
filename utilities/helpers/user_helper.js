@@ -225,7 +225,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
 
             return {
                 status: true,
-                message: emailUpdate ? 'Field updated. Since your have also updated your email your need to confirm by clicking confirmation link in your email inbox' : 'Permissible Fields are updated'
+                message: emailUpdate ? 'Field updated. Since your have also updated your email your need to confirm by clicking confirmation link in your email inbox' : 'Fields are updated'
             }
         } catch (e) {
             return {
