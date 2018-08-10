@@ -20,8 +20,11 @@ router.post('/search', middlewares.isAuthenticated, async (req, res, next) => {
 
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let retVal = await mealHelper.mealDetails(user, req.params.id);
-    genUtil.sendJsonResponse(res, retVal.status ? 200 : 400, retVal.message, retVal.args.meal);
+    let meals = await mealHelper.mealDetails(user, {id: req.params.id}, 0);
+    if (meals.length === 1)
+        genUtil.sendJsonResponse(res, 200, retVal.message, retVal.args.meal);
+    else
+        genUtil.sendJsonResponse(res, 400, 'Unauthorized access');
 });
 
 router.put('/:id', middlewares.isAuthenticated, async (req, res, next) => {
