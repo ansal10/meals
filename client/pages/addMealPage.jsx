@@ -80,12 +80,11 @@ class AddMealPage extends Component {
 
         const images = data.images ? Gen.mergeArray(data.images, this.state.images) : this.state.images;
 
-        let {title, description, calories, type, items, mealTime, status} = data;
+        let {title, description, calories, type, items, mealTime, mealDate, status} = data;
 
-        console.log(mealTime);
         let time = Gen.getTimeFromISODate(mealTime);
-        let date = Gen.getDateFromISODate(mealTime);
-        let day = Gen.getDayFromISODate(mealTime);
+        let date = Gen.getDateFromISODate(mealDate);
+        let day = Gen.getDayFromISODate(mealDate);
 
         const id = this.props.match.params.id || null;
 
@@ -159,7 +158,7 @@ class AddMealPage extends Component {
                                     <div className="confirm_email_check">
                                         Resource created/updated successfully
                                     </div>
-                                    <Link className="proceed-to-link" to="/">Proceed to properties page</Link>
+                                    <Link className="proceed-to-link" to="/">Proceed to meals page</Link>
 
                                 </div>: <form className="add-meal-container" onSubmit={handleSubmit(this.submit.bind(this))}>
 
@@ -203,9 +202,20 @@ class AddMealPage extends Component {
 
                                         <div className="form_row">
                                             <Field
+                                                name="mealDate"
+                                                component={renderDateTimePicker}
+                                                showTime={false}
+                                                label="Meal Date:"
+                                            />
+                                        </div>
+
+
+                                        <div className="form_row">
+                                            <Field
                                                 name="mealTime"
                                                 component={renderDateTimePicker}
                                                 showTime={true}
+                                                dontShowDate={true}
                                                 label="Meal Time:"
                                             />
                                         </div>

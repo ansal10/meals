@@ -28,7 +28,7 @@ class MealCard extends Component {
                         {title}
                     </div>
                     <div className="meal-location">
-                        {`${date} ${time} `}
+                        {`${Gen.getFormattedDate(date)},  ${time} `}
                     </div>
                     <Row>
                         <Col xs={6} className="meal-area">
@@ -39,8 +39,12 @@ class MealCard extends Component {
                         </Col>
                     </Row>
                     <div className="meal-furnishing-status">
-                        {`${calories}, ${status}`}
+                        {`${status ? status : ''} ${calories} calories`}
                     </div>
+                </Col>
+
+                <Col className="arrow" xs={4} md={3}>
+                    <img src={Gen.isGreen(this.props.meal) ? "/assets/graphics/down-arrow.png" : "/assets/graphics/up-arrow.png" } />
                 </Col>
             </Row>
         )

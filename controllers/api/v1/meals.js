@@ -20,7 +20,7 @@ router.post('/search', middlewares.isAuthenticated, async (req, res, next) => {
 
 router.get('/:id', middlewares.isAuthenticated, async (req, res, next) => {
     let user = req.session.user;
-    let meals = await mealHelper.mealDetails(user, {ids: [req.params.id]}, 0);
+    let meals = await mealHelper.searchMeal(user, {ids: [req.params.id]}, 0);
     if (meals.length === 1)
         genUtil.sendJsonResponse(res, 200, '', meals[0]);
     else

@@ -49,8 +49,9 @@ export class Gen {
     static getFormattedDate(date) {
         const year = date.split("-")[0];
         const month = Gen.getMonthFromNumber(date.split("-")[1]);
+        const day = date.split("-")[2];
 
-        return month + " " + year;
+        return day+ " "+ month + " " + year;
     }
 
     static getAvailableString(d1) {
@@ -66,6 +67,10 @@ export class Gen {
             const month = d1.split("-")[1];
             return "available from " + Gen.getMonthFromNumber(month);
         }
+    }
+
+    static isGreen(meal) {
+        return meal.dailyyCalorieGoal > meal.dailyCalorieIntake;
     }
 
     static getMonthFromNumber(month) {

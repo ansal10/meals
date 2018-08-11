@@ -6,8 +6,7 @@ import {renderDropdownList, renderMultiselect, renderTextField} from "../common/
 import { validate_filters as validate }  from './../common/forms/validation';
 import LaddaButton, {SLIDE_UP, XL} from "react-ladda";
 import {Gen} from "../helpers/gen";
-
-
+import { renderDateTimePicker } from "../common/forms/input-types";
 
 class Filter extends Component {
 
@@ -16,18 +15,6 @@ class Filter extends Component {
 
         this.state = {
             loading: false,
-            rent: {
-                min: 500,
-                max: 10000
-            },
-            builtArea: {
-                min: 250,
-                max: 10000
-            },
-            carpetArea: {
-                min: 250,
-                max: 10000
-            }
         }
     }
 
@@ -43,15 +30,25 @@ class Filter extends Component {
 
     submit(data) {
         console.log(data);
-        const dataCopy = Gen.objectCopy(data);
+        let dataCopy = {};
+        if(data.type) {
+            dataCopy.type = data.type;
+        }
+
+        if(data.day) {
+            dataCopy.day = data.day;
+        }
+
+
         if(data.UserId) {
             dataCopy.UserId = [this.props.user.id];
         } else {
             dataCopy.UserId = [];
         }
-        dataCopy.rent = [this.state.rent.min, this.state.rent.max];
-        dataCopy.builtArea = [this.state.builtArea.min, this.state.builtArea.max];
-        dataCopy.carpetArea = [this.state.carpetArea.min, this.state.carpetArea.max];
+
+
+        dataCopy.date = [data.fromDate ? Gen.getDateFromISODate(data.fromDate) : '1990-01-01', data.toTime ? Gen.getDateFromISODate(data.toDate) : '2020-01-01'];
+        dataCopy.time = [data.fromTime ? data.fromTime : '00:00', data.toTime ? data.toTime: '24:00'];
 
         this.props.applyFilter(dataCopy);
     }
@@ -65,109 +62,55 @@ class Filter extends Component {
 
                 <div className="form_row">
                     <Field
-                        name="searchString"
-                        component={renderTextField}
-                        label="Search:"
-                        type="text"
+                        name="type"
+                        component={renderMultiselect}
+                        label="type:"
+                        data={[ "breakfast", "dinner", "lunch", "snacks", "others"  ]}/>
+                </div>
+
+                <div className="form_row">
+                    <Field
+                        name="day"
+                        component={renderMultiselect}
+                        label="day:"
+                        data={[ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ]}/>
+                </div>
+
+                <div className="form_row">
+                    <Field
+                        name="fromDate"
+                        component={renderDateTimePicker}
+                        label="from date:"
+                        showTime={false}
                     />
                 </div>
 
                 <div className="form_row">
                     <Field
-                        name="type"
-                        component={renderMultiselect}
-                        label="type:"
-                        data={[ '1rk', '2rk', '1bhk', '2bhk', '3bhk', '4bhk', '5bhk', '5bhk+' ]}/>
+                        name="toDate"
+                        component={renderDateTimePicker}
+                        label="to date:"
+                        showTime={false}
+                    />
                 </div>
 
                 <div className="form_row">
                     <Field
-                        name="furnishingStatus"
-                        component={renderMultiselect}
-                        label="furnishingStatus:"
-                        data={[ 'furnished', 'unfurnished', 'semifurnished' ]}/>
+                        name="fromTime"
+                        component={renderTextField}
+                        placeholder="HH:MM"
+                        label="from time:"
+                    />
                 </div>
 
                 <div className="form_row">
                     <Field
-                        name="powerBackup"
-                        component={renderMultiselect}
-                        label="powerBackup:"
-                        data={[ 'full', 'partial', 'no' ]}/>
+                        name="toTime"
+                        placeholder="HH:MM"
+                        component={renderTextField}
+                        label="to time:"
+                    />
                 </div>
-
-                <div className="form_row">
-                    <Field
-                        name="availableFor"
-                        component={renderMultiselect}
-                        label="availableFor:"
-                        data={[ 'all', 'family', 'couples', 'bachelors' ]}/>
-                </div>
-
-                <div className="form_row">
-                    <Field
-                        name="availability"
-                        component={renderMultiselect}
-                        label="availability:"
-                        data={[ 'yes', 'no', 'archive' ]}/>
-                </div>
-
-
-                <div className="form_row">
-                    <div className="form_item">
-                        <div className="form_label">
-                            <label>Rent</label>
-                        </div>
-                        <InputRange
-                            draggableTrack
-                            maxValue={10000}
-                            minValue={500}
-                            onChange={value => this.updateState({rent: value})}
-                            value={this.state.rent} />
-                    </div>
-                </div>
-
-
-
-                <div className="form_row">
-                    <div className="form_item">
-                        <div className="form_label">
-                        <label>Built Area</label>
-                    </div>
-                    <InputRange
-                        draggableTrack
-                        maxValue={10000}
-                        minValue={250}
-                        onChange={value => this.updateState({builtArea: value})}
-                        value={this.state.builtArea} />
-                    </div>
-                </div>
-
-                <div className="form_row">
-                    <div className="form_item">
-                        <div className="form_label">
-                        <label>Carpet Area</label>
-                    </div>
-                    <InputRange
-                        draggableTrack
-                        maxValue={10000}
-                        minValue={250}
-                        onChange={value => this.updateState({carpetArea: value})}
-                        value={this.state.carpetArea} />
-                    </div>
-                </div>
-
-                    {
-                        Gen.isUserManagerOrAdmin(this.props.user) ?
-                        <div className="form_row form_checkbox_row">
-                            <Field
-                                name="UserId"
-                                component={renderTextField}
-                                label="Listed by me only:"
-                                type="checkbox"
-                            />
-                        </div> : null
-                    }
 
                 <div className="filter-button form_buttons">
                     <LaddaButton

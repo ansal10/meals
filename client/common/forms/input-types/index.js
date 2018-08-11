@@ -43,7 +43,7 @@ export const renderTextField = ({label, input, helperText, meta: {asyncValidatin
       <div className="form_label">
         <label>{label}</label>
       </div>
-      
+
       <div className="form_input">
         <input {...input} {...custom} />
         <span className="bottom_border"></span>
@@ -67,7 +67,7 @@ export const renderTextarea = ({label, input, helperText, meta: {asyncValidating
       <div className="form_label">
         <label>{label}</label>
       </div>
-      
+
       <div className="form_textarea">
         <textarea {...input} {...custom}></textarea>
         <span className="bottom_border"></span>
@@ -139,7 +139,7 @@ export const renderSelectList = ({ input, data }) =>
                 onBlur={() => input.onBlur()}
                 data={data} />;
 
-export const renderDateTimePicker = ({ input: { onChange, value }, showTime, label, data, valueField, textField, helperText, meta: {asyncValidating, touched, error}, ...custom }) =>(
+export const renderDateTimePicker = ({ input: { onChange, value }, showTime, dontShowDate, label, data, valueField, textField, helperText, meta: {asyncValidating, touched, error}, ...custom }) =>(
     <div className={classNames({'async_validating': asyncValidating, 'form_item': true, 'invalid': touched && error, 'dirty': touched})}>
         <div className="form_label">
             <label>{label}</label>
@@ -147,6 +147,7 @@ export const renderDateTimePicker = ({ input: { onChange, value }, showTime, lab
             <DateTimePicker
         onChange={onChange}
         format="DD MMM YYYY"
+        date={!dontShowDate}
         time={showTime}
         value={!value ? null : new Date(value)}
         />

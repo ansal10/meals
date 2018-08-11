@@ -72,7 +72,7 @@ class Header extends Component {
                             <ul>
 
                                 <li className="first">
-                                    <NavLink activeClassName="active" to="/properties">Home</NavLink>
+                                    <NavLink activeClassName="active" to="/meals">Home</NavLink>
                                 </li>
 
                                 {

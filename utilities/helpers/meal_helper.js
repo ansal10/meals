@@ -31,11 +31,10 @@ const listAllMeal = async (user, params, page) => {
 		attributes: LIST_ALL_MEAL_ATTRIBUTES,
 		where: params,
 		order: [
-			// Will escape id and validate DESC against a list of valid direction parameters
-			['id', 'DESC'],
+			['date', 'DESC'],
+			['time', 'DESC']
 		]
 	});
-
 	meals = applyCaloriesData(user, meals);
 	return meals;
 };
@@ -173,7 +172,7 @@ const searchMeal = async (user, searchParams, page) => {
 		if (isValidArray(searchParams.day)) {  // [sunday, monday, tuesday]
 			query = Object.assign({}, query, {
 				day: {
-					[Op.in]: _.map(searchParams.day, (x) => {
+					[Op.between]: _.map(searchParams.day, (x) => {
 						return x.toLowerCase()
 					})
 				}
@@ -182,18 +181,18 @@ const searchMeal = async (user, searchParams, page) => {
 		if (isValidArray(searchParams.date)) {  // [1,1000]
 			query = Object.assign({}, query, {
 				date: {
-					[Op.in]: searchParams.date
+					[Op.between]: searchParams.date
 				}
 			});
 		}
 		if (isValidArray(searchParams.ids)){
 			query = Object.assign({}, query, {
 				id:{
-					[Op.in]: searchParams.ids
+					[Op.in]: _.map(searchParams.ids, (i) => { return Number(i)})
 				}
 			})
 		}
-		let userIds = filterApplicableUserIds(user, searchParams.UserId);
+		let userIds = await filterApplicableUserIds(user, searchParams.UserId);
 		if (isValidArray(userIds)) {
 			query = Object.assign({}, query, {  // only acceptable ids
 				UserId: {
@@ -267,7 +266,7 @@ const applyCaloriesData = async (user, meals) =>{
         },
         attributes:[
             'date',
-            [models.sequelize.fn('max', models.sequelize.col('calories')), 'dayCalories']
+            [models.sequelize.fn('sum', models.sequelize.col('calories')), 'dayCalories']
         ],
         group: 'date'
     });

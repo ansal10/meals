@@ -11,41 +11,41 @@ class UserCard extends Component {
         super(props);
     }
 
-    propertyClicked() {
+    mealClicked() {
         this.props.history.push(`/user/${this.props.user.id}`);
     }
 
     render(){
         const {id, email, name, sex, role, status, createdAt, updatedAt} = this.props.user;
         return(
-            <Row className="property-card-container" onClick={this.propertyClicked.bind(this)}>
-                <Col className="property-image-container" xs={4} md={3}>
-                    <img className="property-image" src="https://www.mykhel.com/thumb/247x100x233/cricket/players/9/11419..jpg" />
+            <Row className="meal-card-container" onClick={this.mealClicked.bind(this)}>
+                <Col className="meal-image-container" xs={4} md={3}>
+                    <img className="meal-image" src="https://www.mykhel.com/thumb/247x100x233/cricket/players/9/11419..jpg" />
                 </Col>
 
-                <Col className="property-info-container" xs={8} md={9}>
-                    <div className="property-title" >
+                <Col className="meal-info-container" xs={8} md={9}>
+                    <div className="meal-title" >
                         {name}
                     </div>
-                    <div className="property-location">
+                    <div className="meal-location">
                         {`sex: ${sex} `}
                     </div>
-                    <div className="property-location">
+                    <div className="meal-location">
                         {`role: ${role} `}
                     </div>
-                    <div className={`${status === 'active' ? 'green' : 'red'} property-location`}>
+                    <div className={`${status === 'active' ? 'green' : 'red'} meal-location`}>
                         {`status: ${status} `}
                     </div>
 
                     <Row>
-                        <Col xs={6} className="property-area">
+                        <Col xs={6} className="meal-area">
                             {email}
                         </Col>
-                        <Col xs={6} className="property-rate">
+                        <Col xs={6} className="meal-rate">
                             {`createdAt: ${Gen.getFormattedDate(createdAt)}`}
                         </Col>
                     </Row>
-                    <div className="property-furnishing-status">
+                    <div className="meal-furnishing-status">
                         {`updatedAt: ${Gen.getFormattedDate(updatedAt)}`}
                     </div>
                 </Col>

@@ -10,7 +10,21 @@ export const validate_filters = values => {
         if (!values[field]) {
             errors[field] = 'Required'
         }
-    })
+    });
+
+    if(values['fromTime']){
+        let value = values['fromTime'];
+        if(value.length !=5 || isNaN(value[0]) || isNaN(value[1]) || isNaN(value[3]) || isNaN(value[4]) || value[2] !== ':') {
+            errors.fromTime = "from time should be in format hh:mm";
+        }
+    }
+
+    if(values['toTime']){
+        let value = values['toTime'];
+        if(value.length !=5 || isNaN(value[0]) || isNaN(value[1]) || isNaN(value[3]) || isNaN(value[4]) || value[2] !== ':') {
+            errors.fromTime = "to time should be in format hh:mm";
+        }
+    }
     return errors;
 
 };
@@ -60,30 +74,30 @@ export const validate_addProperty = values => {
 }
 
 export const validate_contactForm = values => {
-    
+
     const errors = {}
-    
+
     const requiredFields = [
       'name',
       'email',
       'message'
     ]
-  
+
     requiredFields.forEach(field => {
       if (!values[field]) {
         errors[field] = 'Required'
       }
     })
-  
+
     if (
       values.email &&
       !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
     ) {
       errors.email = 'Invalid email address'
     }
-  
+
     return errors;
-    
+
   }
 
 

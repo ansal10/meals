@@ -65,11 +65,11 @@ class UsersPage extends Component {
         const {users} = this.props;
         if(this.props.users){
             return(
-                <div className="properties-page">
+                <div className="meals-page">
                     {this.head()}
                     <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true}  transitionAppearTimeout={5000} transitionEnter={false} transitionLeave={false}>
                     <div className="main anim-appear">
-                        <Grid className="properties">
+                        <Grid className="meals">
 
                             <Row>
                                 {
