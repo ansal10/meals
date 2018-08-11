@@ -192,16 +192,16 @@ const updateUserDetails = async (updater, userArgs, userId) => {
             else
                 updateVals = _.pick(userArgs, ADMIN_UPDATE_ALLOWED_FIELDS);
 
-            emailUpdate = userArgs.email ?  user.email !== userArgs.email : false;
+            emailUpdate = userArgs.email ? user.email !== userArgs.email : false;
             let managerAssignError = permission.canBeManagerToUserMessage(manager, user);
-            if (managerAssignError != null){
+            if (managerAssignError != null) {
                 return {
                     status: false,
                     message: managerAssignError
                 }
             }
-            if (userArgs.managerId && manager === null){
-                return{
+            if (userArgs.managerId && manager === null) {
+                return {
                     status: false,
                     message: config.MESSAGES.MANAGER_NOT_FOUND
                 }
@@ -256,8 +256,19 @@ const deleteUser = async (requester, userId) => {
     let u = await models.User.findOne({where: {id: userid}});
     if (!u)
         return {status: false, message: config.MESSAGES.RESOURCE_NOT_FOUND};
-    if (permission.canDeleteUser(requester, u))
+    if (permission.canDeleteUser(requester, u)) {
+        if (u.role === 'manager')  // if manager remove his manager from all user
+            await models.User.update({managerId: null}, {where: {managerId: userId}});
+
+        await models.Meal.destroy({
+            where: {
+                UserId: u.id
+            }
+        });
+        u.destroy();
+
         return {status: true, message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY, args: {user: u}};
+    }
     else return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
 }
 
@@ -328,4 +339,5 @@ module.exports.updateUserDetails = updateUserDetails;
 module.exports.findUserDetails = findUserDetails;
 module.exports.searchUsers = searchUsers;
 module.exports.authenticatedUser = authenticatedUser;
+module.exports.deleteUser = deleteUser;
 

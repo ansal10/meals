@@ -44,7 +44,9 @@ const canSeeUserDetails = (user1, user2) => {
 };
 
 const canDeleteUser = (user1, user2) =>{
-    return user1.role === 'admin';
+    if ( user1.role === 'admin' )
+        return true;
+    else return user1.role === 'manager' && user2.managerId === user1.id && user2.role === 'consumer' ;
 
 };
 

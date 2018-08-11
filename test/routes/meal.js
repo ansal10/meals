@@ -75,6 +75,17 @@ describe('Meals', async () => {
                 });
             res.should.have.status(200);
         });
+        it('should search meals for admin', async () => {
+            let u1 = await userFactory({role: 'consumer', calorieGoal:1000});
+            let u2 = await userFactory({role: 'consumer', calorieGoal: 2000});
+            await mealFactory({UserId: u1.id});
+            await mealFactory({UserId: u2.id});
+
+            let res = await authenticatedUser
+                .post('/api/v1/meal/search');
+            let body = res.body;
+            res.should.have.status(200);
+        });
     });
 
     describe('/ POST Meal', async () => {

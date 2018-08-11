@@ -149,4 +149,5 @@ router.delete('/:id', middlewares.isAuthenticated, async (req, res, next) => {
         genUtil.sendJsonResponse(res, 400, retVal.message, null);
 });
 
+
 module.exports = router;
