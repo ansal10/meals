@@ -221,7 +221,7 @@ const updateUserDetails = async (updater, userArgs, userId) => {
 
             await user.save();
             if (emailUpdate)
-                notifier.notifyEmailConfirmation(retVal.args.user);
+                notifier.notifyEmailConfirmation(user);
 
             return {
                 status: true,
@@ -253,7 +253,7 @@ const findUserDetails = async (requester, userid) => {
 };
 
 const deleteUser = async (requester, userId) => {
-    let u = await models.User.findOne({where: {id: userid}});
+    let u = await models.User.findOne({where: {id: userId}});
     if (!u)
         return {status: false, message: config.MESSAGES.RESOURCE_NOT_FOUND};
     if (permission.canDeleteUser(requester, u)) {
@@ -267,10 +267,10 @@ const deleteUser = async (requester, userId) => {
         });
         u.destroy();
 
-        return {status: true, message: config.MESSAGES.RESOURCE_UPDATED_SUCCESSFULLY, args: {user: u}};
+        return {status: true, message: config.MESSAGES.RECORD_DELETED_SUCCESSFULLY, args: {user: u}};
     }
     else return {status: false, message: config.MESSAGES.UNAUTHORIZED_ACCESS}
-}
+};
 
 const searchUsers = async (requester, searchParams) => {
     if (permission.canSeeAllUsers(requester)) {

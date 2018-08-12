@@ -13,7 +13,7 @@ import {appName} from '../constants';
 import { withRouter } from 'react-router-dom'
 import axiosInstance from '../client';
 
-import {UPDATE_USER_ENDPOINT_PUT} from "../endpoints";
+import { DELETE_USER_ENDPOINT, UPDATE_USER_ENDPOINT_PUT } from "../endpoints";
 import {renderDropdownList} from "../common/forms/input-types/index";
 import {Gen} from "../helpers/gen";
 import {clearUserDetails, fetchOtherUserDetails} from "../actions";
@@ -38,6 +38,7 @@ class UserProfile extends Component {
     }
 
     logout(e) {
+        if(e)
         e.preventDefault();
         this.props.clearUserDetails();
         this.props.history.push(`/login`);
@@ -180,6 +181,7 @@ class UserProfile extends Component {
                                         </div>
 
                                         <Link className="logout-link" to="/" onClick={this.logout.bind(this)}>Logout</Link>
+
                                     </div>
 
                             </form>

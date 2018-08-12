@@ -1,4 +1,4 @@
-exports.appName = 'HousoRento'
+exports.appName = 'MyMealo'
 
 exports.actions = {
     FETCH_MEAL: 'FETCH_MEAL',

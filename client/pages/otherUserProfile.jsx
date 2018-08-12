@@ -12,7 +12,7 @@ import InternalTextBanner from './../components/banners/internalTextBanner';
 import {appName} from '../constants';
 
 import axiosInstance from '../client';
-import {UPDATE_USER_ENDPOINT_PUT} from "../endpoints";
+import { DELETE_USER_ENDPOINT, UPDATE_USER_ENDPOINT_PUT } from "../endpoints";
 import {renderDropdownList} from "../common/forms/input-types/index";
 import {Gen} from "../helpers/gen";
 import {clearUserDetails, fetchOtherUserDetails} from "../actions";
@@ -46,6 +46,34 @@ class OtherUserProfile extends Component {
     logout(e) {
         e.preventDefault();
         this.props.clearUserDetails();
+    }
+
+    delete(e) {
+        const id = this.props.match.params.id
+        if(e)
+            e.preventDefault();
+        axiosInstance.delete(DELETE_USER_ENDPOINT + '/' + id, {})
+            .then((success) => {
+                console.log(success.data.success.message);
+                notify.show(success.data.success.message, 'success');
+                this.setState({
+                    loading: false,
+                    showForm: false
+                });
+                window.location.href = "/";
+            })
+            .catch((error) => {
+                this.setState({
+                    loading: false,
+                    showForm: true
+                });
+
+                if(error.response.data && error.response.data.message) {
+                    console.log(error.response.data.error.message);
+                    notify.show(error.response.data.error.message, 'error');
+                }
+
+            });
     }
 
     submit(data){
@@ -178,6 +206,11 @@ class OtherUserProfile extends Component {
                                                 Update Profile
                                             </LaddaButton>
                                         </div>
+
+                                        <Link className="logout-link" to="/" onClick={this.delete.bind(this)}>Delete Account</Link>
+
+                                        <p>Note: deleting account will delete all your data including meals that you created.</p>
+
                                     </div>
 
                             </form>

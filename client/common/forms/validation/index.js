@@ -22,7 +22,7 @@ export const validate_filters = values => {
     if(values['toTime']){
         let value = values['toTime'];
         if(value.length !=5 || isNaN(value[0]) || isNaN(value[1]) || isNaN(value[3]) || isNaN(value[4]) || value[2] !== ':') {
-            errors.fromTime = "to time should be in format hh:mm";
+            errors.toTime = "to time should be in format hh:mm";
         }
     }
     return errors;
@@ -30,29 +30,19 @@ export const validate_filters = values => {
 };
 
 
-export const validate_addProperty = values => {
+export const validate_meal = values => {
 
     const errors = {}
 
     const requiredFields = [
         'title',
-        'country',
-        'city',
-        'locality',
-        'rent',
-        'builtArea',
-        'carpetArea',
-        'type',
-        'availability',
-        'availableFrom',
         'description',
-        'availableFor',
-        'floor',
-        'address',
-        'powerBackup',
-        'maintenance',
-        'features',
-        'furnishingStatus',
+        'calories',
+        'type',
+        'mealDate',
+        'mealTime',
+        'status',
+        'items',
     ]
 
     requiredFields.forEach(field => {
@@ -61,13 +51,17 @@ export const validate_addProperty = values => {
         }
     })
 
-    if(values.address && (values.address.length < 10 || values.address.length > 100))
-        errors.address = "address must be between 10 and 100 length";
+    if(values['mealTime']){
+        let value = values['mealTime'];
+        if(value.length !=5 || isNaN(value[0]) || isNaN(value[1]) || isNaN(value[3]) || isNaN(value[4]) || value[2] !== ':') {
+            errors.mealTime = "meal time should be in format hh:mm";
+        }
+    }
 
     if(values.title && (values.title.length < 10 || values.title.length > 50))
         errors.title = "title must be between 10 and 50 length";
 
-    if(values.description && (values.description.length < 50 || values.description.length > 1000))
+    if(values.description && (values.description.length < 10 || values.description.length > 1000))
         errors.description = "description must be between 50 and 1000 length";
     return errors;
 

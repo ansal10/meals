@@ -47,7 +47,7 @@ class Meal extends Component {
         const {mealData} = this.props;
 
         if(this.props.mealData){
-            const {id, title, description, calories, type, items, time, day, date, status, createdAt, updatedAt} = this.props.mealData;
+            const {id, title, description, calories, type, items, UserId, time, day, date, status, createdAt, updatedAt} = this.props.mealData;
 
             return(
                 <div className="meal-page">
@@ -68,7 +68,7 @@ class Meal extends Component {
                                                     <div className="delete-meal" onClick={this.deleteMeal.bind(this)}>
                                                         Delete
                                                     </div>
-                                                </div>
+                                                    </div>
                                                     : ''
                                             }
                                         </Row>
@@ -79,6 +79,14 @@ class Meal extends Component {
                                                 {/*</div>*/}
                                             {/*</Col>*/}
                                             <Col xs={12} md={6}>
+
+                                                <Row>
+                                                    <Col xs={6}>
+                                                        <Link to={`/user/${UserId}`} > User Profile </Link>
+                                                    </Col>
+
+                                                </Row>
+
                                                 <Row>
                                                     <Col xs={6}>
                                                         <InfoBlock heading="Type" info={type}/>
@@ -102,6 +110,8 @@ class Meal extends Component {
                                                     <Col xs={6} >
                                                         <InfoBlock heading="day" info={day}/>
                                                     </Col>
+
+
                                                 </Row>
 
                                             </Col>

@@ -18,7 +18,7 @@ export class Gen {
     }
 
     static getDayFromISODate(date) {
-        return Gen.getDayFromNumber(moment(date).day());
+        return date ? Gen.getDayFromNumber(moment(date).day()) : Gen.getDayFromNumber(moment().day());
     }
 
     static isUserAdmin(user) {

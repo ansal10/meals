@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import {Link, NavLink} from 'react-router-dom';
 import {notify} from 'react-notify-toast';
 import { Field, reduxForm } from 'redux-form';
-import { validate_addMeal as validate }  from './../common/forms/validation';
+import { validate_meal as validate }  from './../common/forms/validation';
 import { renderTextField, renderMultiselect, renderTextarea } from './../common/forms/input-types';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import InternalTextBanner from './../components/banners/internalTextBanner';
@@ -82,7 +82,7 @@ class AddMealPage extends Component {
 
         let {title, description, calories, type, items, mealTime, mealDate, status} = data;
 
-        let time = Gen.getTimeFromISODate(mealTime);
+        let time = mealTime;
         let date = Gen.getDateFromISODate(mealDate);
         let day = Gen.getDayFromISODate(mealDate);
 
@@ -209,14 +209,12 @@ class AddMealPage extends Component {
                                             />
                                         </div>
 
-
                                         <div className="form_row">
                                             <Field
                                                 name="mealTime"
-                                                component={renderDateTimePicker}
-                                                showTime={true}
-                                                dontShowDate={true}
-                                                label="Meal Time:"
+                                                component={renderTextField}
+                                                placeholder="HH:MM"
+                                                label="meal time:"
                                             />
                                         </div>
 
@@ -232,9 +230,9 @@ class AddMealPage extends Component {
 
                                         <div className="form_row">
                                             <Field
-                                                name="features"
+                                                name="items"
                                                 component={renderMultiselect}
-                                                label="features:"
+                                                label="items:"
                                                 data={[ 'eggs', 'fruits', 'other', 'rice']}/>
                                         </div>
 

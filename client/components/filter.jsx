@@ -57,7 +57,7 @@ class Filter extends Component {
 
         const {handleSubmit} = this.props;
         return(
-            <div className="form-wrapper">
+            <div className="form-wrapper form_wrap">
                 <form className="filter-container" onSubmit={handleSubmit(this.submit.bind(this))} >
 
                 <div className="form_row">

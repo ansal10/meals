@@ -8,6 +8,7 @@ export const DELETE_MEAL_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/meal';
 export const SIGN_UP_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/signup';
 export const LOG_IN_ENDPOINT_POST = config.axiosInstance_baseURL+'/api/v1/user/login';
 export const UPDATE_USER_ENDPOINT_PUT = config.axiosInstance_baseURL+'/api/v1/user';
+export const DELETE_USER_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/user';
 export const GET_USER_DETAILS = config.axiosInstance_baseURL+'/api/v1/user/details';
 export const GET_USERS_ENDPOINT = config.axiosInstance_baseURL+'/api/v1/user';
 export const GET_OTHER_USER_DETAILS = config.axiosInstance_baseURL+'/api/v1/user';
