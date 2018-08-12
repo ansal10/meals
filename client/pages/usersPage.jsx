@@ -32,7 +32,7 @@ class UsersPage extends Component {
         if (this.props.users) {
             const usersData = this.props.users.map((user, index) => {
                 return (
-                    <div key={index} className="property">
+                    <div key={index} className="meal">
                         <UserCard user={user}/>
                     </div>
                 );

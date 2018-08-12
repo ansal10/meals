@@ -17,7 +17,7 @@ const STRS = {
     EMAIL_NOT_VERIFIED: 'Your email is not verified',
     LOGGED_IN_SUCCESSFUL: 'You have been logged in successful',
     INACTIVE_ACCOUNT: 'Your account have been deactivated',
-    INVALID_ROLE: 'You can only singup as consumer or realtor',
+    INVALID_ROLE: 'You can only signup as consumer',
 };
 
 const validateAndSanitizeSignupDetails = async function (email, name, password, sex, role) {
