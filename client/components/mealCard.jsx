@@ -19,11 +19,11 @@ class MealCard extends Component {
         const {id, title, description, calories, type, items, time, day, date, status, createdAt, updatedAt} = this.props.meal;
         return(
             <Row className="meal-card-container" onClick={this.mealClicked.bind(this)}>
-                {/*<Col className="meal-image-container" xs={4} md={3}>*/}
-                    {/*<img className="meal-image" src={images[0]} />*/}
-                {/*</Col>*/}
+                <Col className="meal-image-container" xs={3} md={3}>
+                    <img className="meal-image" src={`/assets/graphics/${type}.jpg`} />
+                </Col>
 
-                <Col className="meal-info-container" xs={8} md={9}>
+                <Col className="meal-info-container" xs={6} md={6}>
                     <div className="meal-title" >
                         {title}
                     </div>
@@ -43,8 +43,8 @@ class MealCard extends Component {
                     </div>
                 </Col>
 
-                <Col className="arrow" xs={4} md={3}>
-                    <img src={Gen.isGreen(this.props.meal) ? "/assets/graphics/down-arrow.png" : "/assets/graphics/up-arrow.png" } />
+                <Col className="arrow" xs={3} md={3}>
+                    <img className="arrow-indicator" src={Gen.isGreen(this.props.meal) ? "/assets/graphics/down-arrow.png" : "/assets/graphics/up-arrow.png" } />
                 </Col>
             </Row>
         )

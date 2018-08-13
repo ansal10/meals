@@ -26,10 +26,7 @@ class AddMealPage extends Component {
         this.state = {
             loading: false,
             showForm: true,
-            images: [],
             initialized: false,
-            lat: null,
-            lng: null,
         };
     }
 
@@ -57,40 +54,21 @@ class AddMealPage extends Component {
         });
     }
 
-    addImage(uploadUrl) {
-        const newState = Gen.objectCopy(this.state);
-        newState.images.push(uploadUrl);
-        this.setState(newState);
-    }
-
-    removeImage() {
-        // no action
-    }
-
-    latlngReceived(latlng) {
-        console.log(latlng);
-        const newState = {...this.state, ...latlng};
-        this.setState(newState);
-    }
-
 
     submit(data){
         this.toggle();
         console.log(data);
 
-        const images = data.images ? Gen.mergeArray(data.images, this.state.images) : this.state.images;
+        let {title, description, calories, type, items, time, date} = data;
 
-        let {title, description, calories, type, items, mealTime, mealDate, status} = data;
-
-        let time = mealTime;
-        let date = Gen.getDateFromISODate(mealDate);
-        let day = Gen.getDayFromISODate(mealDate);
+        let formatteddate = Gen.getDateFromISODate(date);
+        let day = Gen.getDayFromISODate(date);
 
         const id = this.props.match.params.id || null;
 
         const endpoint = this.getPageType() === "Edit" ? UPDATE_MEAL_ENDPOINT + "/" + id : CREATE_MEAL_ENDPOINT;
 
-        const postData = {id, title, description, calories, type, items, time, day, date, status};
+        const postData = {id, title, description, calories, type, items, time, day, date: formatteddate};
 
         if(this.getPageType() === "Edit") {
             axiosInstance.put(endpoint, postData)
@@ -172,7 +150,6 @@ class AddMealPage extends Component {
                                             />
                                         </div>
 
-                                        <UploadImage images={mealData ? mealData.images : []} addImage={this.addImage.bind(this)} removeImage={this.removeImage.bind(this)}/>
                                         <div className="form_row">
                                             <Field
                                                 name="description"
@@ -202,7 +179,7 @@ class AddMealPage extends Component {
 
                                         <div className="form_row">
                                             <Field
-                                                name="mealDate"
+                                                name="date"
                                                 component={renderDateTimePicker}
                                                 showTime={false}
                                                 label="Meal Date:"
@@ -211,20 +188,11 @@ class AddMealPage extends Component {
 
                                         <div className="form_row">
                                             <Field
-                                                name="mealTime"
+                                                name="time"
                                                 component={renderTextField}
                                                 placeholder="HH:MM"
                                                 label="meal time:"
                                             />
-                                        </div>
-
-
-                                        <div className="form_row">
-                                            <Field
-                                                name="status"
-                                                component={renderDropdownList}
-                                                label="Status:"
-                                                data={[ 'exact', 'over', 'below' ]}/>
                                         </div>
 
 
@@ -257,7 +225,6 @@ class AddMealPage extends Component {
 
                                 </form>
                             }
-
                         </div>
                       </div>
                   </div>

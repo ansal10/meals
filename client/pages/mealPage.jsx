@@ -47,7 +47,7 @@ class Meal extends Component {
         const {mealData} = this.props;
 
         if(this.props.mealData){
-            const {id, title, description, calories, type, items, UserId, time, day, date, status, createdAt, updatedAt} = this.props.mealData;
+            const {id, title, description, calories, type, items, UserId, time, day, date, createdAt, updatedAt} = this.props.mealData;
 
             return(
                 <div className="meal-page">
@@ -98,9 +98,6 @@ class Meal extends Component {
                                                 <Row>
                                                     <Col xs={6} >
                                                         <InfoBlock heading="Calories" info={calories} />
-                                                    </Col>
-                                                    <Col xs={6}>
-                                                        <InfoBlock heading="status" info={status}/>
                                                     </Col>
                                                 </Row>
                                                 <Row>
