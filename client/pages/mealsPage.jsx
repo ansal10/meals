@@ -22,7 +22,12 @@ class Meals extends Component {
 
     componentDidMount(){
         this.props.clearNextUrl();
-        this.props.fetchMealsAction();
+        const id = this.props.match.params.id;
+        if(id)
+            this.props.fetchMealsAction({UserId: [id]});
+        else
+            this.props.fetchMealsAction();
+
     }
 
     loadMoreClicked() {
@@ -85,6 +90,7 @@ class Meals extends Component {
     render() {
 
         const {meals} = this.props;
+        const userId = this.props.match.params.id;
         if(this.props.meals){
             return(
                 <div className="meals-page">
@@ -99,7 +105,7 @@ class Meals extends Component {
 
                             <Row>
                                 <Col className={`${!this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={4}>
-                                    <Filter user={this.props.user} applyFilter={this.fetchMealAndHideFilterOnMobile.bind(this)}/>
+                                    <Filter user={this.props.user} applyFilter={this.fetchMealAndHideFilterOnMobile.bind(this)} userId={userId ? userId: ''} />
                                 </Col>
                                 <Col className={`${this.state.showFilterOnMobile ? 'mobile-hidden' : 'mobile-displayed'}`} xs={12} md={8}>
                                     {

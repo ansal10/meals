@@ -40,8 +40,8 @@ class Filter extends Component {
         }
 
 
-        if(data.UserId) {
-            dataCopy.UserId = [this.props.user.id];
+        if(this.props.userId) {
+            dataCopy.UserId = [this.props.userId];
         } else {
             dataCopy.UserId = [];
         }
@@ -136,6 +136,7 @@ class Filter extends Component {
 Filter.proptypes = {
     applyFilter: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
+    userId: PropTypes.number,
 }
 
 Filter = reduxForm({

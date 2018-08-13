@@ -38,6 +38,11 @@ export default [
         ...App,
         routes: [
             {
+            path: '/meals/:id',
+            ...Meals
+            },
+            {
+                path: '/meals',
                 ...Meals
             }
         ]

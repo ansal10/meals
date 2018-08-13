@@ -42,11 +42,11 @@ class UserCard extends Component {
                             {email}
                         </Col>
                         <Col xs={6} className="meal-rate">
-                            {`createdAt: ${Gen.getFormattedDate(createdAt)}`}
+                            {`createdAt: ${Gen.getDateFromISODate(createdAt)}`}
                         </Col>
                     </Row>
                     <div className="meal-furnishing-status">
-                        {`updatedAt: ${Gen.getFormattedDate(updatedAt)}`}
+                        {`updatedAt: ${Gen.getDateFromISODate(updatedAt)}`}
                     </div>
                 </Col>
             </Row>

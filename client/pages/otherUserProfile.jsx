@@ -16,6 +16,7 @@ import { DELETE_USER_ENDPOINT, UPDATE_USER_ENDPOINT_PUT } from "../endpoints";
 import {renderDropdownList} from "../common/forms/input-types/index";
 import {Gen} from "../helpers/gen";
 import {clearUserDetails, fetchOtherUserDetails} from "../actions";
+import { Col, Row } from "react-bootstrap";
 
 class OtherUserProfile extends Component {
 
@@ -47,6 +48,7 @@ class OtherUserProfile extends Component {
         e.preventDefault();
         this.props.clearUserDetails();
     }
+
 
     delete(e) {
         const id = this.props.match.params.id
@@ -126,6 +128,7 @@ class OtherUserProfile extends Component {
 
                                     <div className="form_wrap">
 
+                                        <Link className="right-align" to={`/meals/${this.props.match.params.id}`} > User's Meals </Link>
 
                                         <div className="form_row">
                                             <Field
